@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU - PWA Sincronizada con Google Sheets</title>
+    <title>DEU - PWA Alemán Avanzada</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
     
-    <!-- Librería oficial de Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
@@ -18,307 +17,80 @@
             --text-muted: #666666;
             --primary: #dd0000;
             --primary-hover: #b30000;
-            --accent-gold: #ffcc00;
             --border: #eaeaea;
             --radius: 12px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
         aside {
-            width: 260px;
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 16px;
-            position: relative;
+            width: 260px; background-color: var(--card-bg); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 24px 16px; position: relative;
         }
-
         aside::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #000000 33.33%, #dd0000 33.33% 66.66%, #ffcc00 66.66%);
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #000 33.33%, #dd0000 33.33% 66.66%, #ffcc00 66.66%);
         }
+        .logo-area { font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; padding-left: 12px; display: flex; align-items: center; gap: 10px; }
+        .logo-area span { color: var(--primary); }
+        .auth-container { margin-bottom: 24px; padding-left: 12px; }
 
-        .logo-area {
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
-            margin-bottom: 20px;
-            padding-left: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .nav-menu { display: flex; flex-direction: column; gap: 6px; list-style: none; overflow-y: auto; max-height: calc(100vh - 180px); }
+        .nav-item { padding: 10px 14px; border-radius: var(--radius); font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
+        .nav-item:hover { background-color: #f5f5f5; color: var(--text-main); }
+        .nav-item.active { background-color: var(--text-main); color: #fff; }
 
-        .logo-area span {
-            color: var(--primary);
-        }
-
-        .auth-container {
-            margin-bottom: 24px;
-            padding-left: 12px;
-        }
-
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            list-style: none;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: var(--radius);
-            font-weight: 500;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover {
-            background-color: #f5f5f5;
-            color: var(--text-main);
-        }
-
-        .nav-item.active {
-            background-color: var(--text-main);
-            color: #ffffff;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            padding: 40px;
-        }
-
-        .section-container {
-            display: none;
-            max-width: 900px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .section-container.active {
-            display: block;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 24px;
-            letter-spacing: -0.5px;
-        }
+        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 40px; }
+        .section-container { display: none; max-width: 900px; width: 100%; margin: 0 auto; }
+        .section-container.active { display: block; }
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
 
         .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) 110px;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: var(--card-bg);
-            padding: 16px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) 110px; gap: 10px; margin-bottom: 20px;
+            background: var(--card-bg); padding: 16px; border: 1px solid var(--border); border-radius: var(--radius);
         }
+        input, select { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 0.95rem; background: var(--bg-color); color: var(--text-main); }
+        input:focus, select:focus { border-color: var(--primary); }
+        button.btn-action { background-color: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        button.btn-action:hover { background-color: var(--primary-hover); }
 
-        input, select {
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            outline: none;
-            font-size: 0.95rem;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-        }
+        .data-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 10px; margin-bottom: 20px; }
+        .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        .data-table th { background-color: #f8f9fa; font-weight: 600; color: var(--text-muted); }
+        .data-table tr:last-child td { border-bottom: none; }
 
-        input:focus, select:focus {
-            border-color: var(--primary);
-        }
-
-        button.btn-action {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        button.btn-action:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
-        }
-
-        .data-table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table-link {
-            color: var(--primary);
-            cursor: pointer;
-            text-decoration: underline;
-            font-weight: 500;
-            background: none;
-            border: none;
-            font-size: 0.95rem;
-            padding: 0;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
+        .table-link { color: var(--primary); cursor: pointer; text-decoration: underline; font-weight: 500; background: none; border: none; font-size: 0.95rem; padding: 0; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
         .badge.yes { background-color: #e6f4ea; color: #137333; }
         .badge.no { background-color: #fce8e6; color: #c5221f; }
 
-        .btn-login {
-            background-color: var(--text-main);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9rem;
-            width: 100%;
-            transition: background 0.2s;
-        }
-        .btn-login:hover { background-color: var(--primary); }
+        .btn-login { background-color: var(--text-main); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; width: 100%; }
+        .loading-text { color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; }
 
-        .loading-text {
-            color: var(--text-muted);
-            font-style: italic;
-            padding: 20px;
-            text-align: center;
-        }
+        /* Vocabulario Card */
+        .vocab-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; max-width: 500px; margin: 0 auto; }
+        .vocab-word { font-size: 2rem; font-weight: 800; margin: 16px 0; color: var(--primary); }
+        .vocab-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .option-btn { padding: 12px; border: 1px solid var(--border); background: var(--bg-color); border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; }
 
-        /* Estilo Vocabulario App */
-        .vocab-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .vocab-word {
-            font-size: 2rem;
-            font-weight: 800;
-            margin: 16px 0;
-            color: var(--primary);
-        }
-        .vocab-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .option-btn {
-            padding: 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-color);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .option-btn:hover {
-            border-color: var(--primary);
-            background: #fff5f5;
-        }
+        /* Lector de Textos / Historias */
+        .story-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; line-height: 1.6; font-size: 1.05rem; }
+        .story-box h3 { margin-bottom: 15px; color: var(--primary); }
+        .story-box p { margin-bottom: 15px; }
 
         /* Modal Reproductor YouTube */
-        #modal-player {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--radius);
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        .close-modal {
-            position: absolute;
-            top: 15px; right: 20px;
-            background: none; border: none;
-            font-size: 1.5rem; cursor: pointer;
-            color: var(--text-main);
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
+        #modal-player { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg); padding: 20px; border-radius: var(--radius); max-width: 600px; width: 90%; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; overflow: auto; }
             aside { width: 100%; padding: 16px; }
             aside::before { display: none; }
-            .nav-menu { flex-direction: row; overflow-x: auto; }
+            .nav-menu { flex-direction: row; overflow-x: auto; max-height: none; }
             main { padding: 20px; }
             .form-grid { grid-template-columns: 1fr; }
         }
@@ -335,8 +107,9 @@
         <ul class="nav-menu">
             <li class="nav-item active" onclick="switchTab('podcast', this)">Podcast</li>
             <li class="nav-item" onclick="switchTab('kinos', this)">Kinos</li>
-            <li class="nav-item" onclick="switchTab('bucher', this)">Bucher</li>
+            <li class="nav-item" onclick="switchTab('bucher', this)">Bucher (Meta 5 Hojas)</li>
             <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario</li>
+            <li class="nav-item" onclick="switchTab('lecturas', this)">Lecturas & Historias</li>
         </ul>
     </aside>
 
@@ -354,42 +127,53 @@
                 </select>
                 <button class="btn-action" onclick="addPodcast()">Añadir</button>
             </div>
-            <div id="loading-podcast" class="loading-text">Conéctate a Google para sincronizar tus podcasts...</div>
+            <div id="loading-podcast" class="loading-text">Sincronizando podcasts...</div>
             <table class="data-table" id="table-podcast-container" style="display:none;">
-                <thead><tr><th>Nivel</th><th>Podcast</th><th>Reproductor</th><th>Estado</th></tr></thead>
+                <thead><tr><th>Nivel</th><th>Podcast</th><th>Reproductor</th><th>Estado</th><th>Acción</th></tr></thead>
                 <tbody id="table-podcast"></tbody>
             </table>
         </div>
 
         <!-- KINOS -->
         <div id="kinos" class="section-container">
-            <h1>Kinos</h1>
+            <h1>Kinos (Películas y Series)</h1>
             <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px; margin-bottom: 20px;">
                 <input type="text" id="kino-titulo" placeholder="Película o serie...">
                 <input type="text" id="kino-donde" placeholder="Dónde (ej. Cuevana)...">
                 <button class="btn-action" onclick="addKino()">Agregar</button>
             </div>
-            <div id="loading-kinos" class="loading-text">Conéctate a Google para sincronizar tus películas...</div>
+            
+            <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--text-muted);">Pendientes</h3>
+            <div id="loading-kinos" class="loading-text">Sincronizando películas...</div>
             <table class="data-table" id="table-kinos-container" style="display:none;">
-                <thead><tr><th>Películas por ver</th><th>Dónde</th></tr></thead>
+                <thead><tr><th>Película / Serie</th><th>Dónde</th><th>Marcar Vista</th></tr></thead>
                 <tbody id="table-kinos"></tbody>
+            </table>
+
+            <h3 style="font-size: 1.1rem; margin: 20px 0 10px 0; color: var(--text-muted);">Ya Vistas</h3>
+            <table class="data-table" id="table-kinos-vistas-container">
+                <thead><tr><th>Película / Serie</th><th>Dónde</th></tr></thead>
+                <tbody id="table-kinos-vistas"><tr><td colspan="2" style="color:var(--text-muted); text-align:center;">Ninguna película vista aún</td></tr></tbody>
             </table>
         </div>
 
         <!-- BUCHER -->
         <div id="bucher" class="section-container">
-            <h1>Bucher (Lectura)</h1>
-            <div style="display: grid; grid-template-columns: 1fr 120px 120px; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="bucher-titulo" placeholder="Tema / Página">
-                <select id="bucher-estado">
-                    <option value="TRUE">TRUE (Leído)</option>
-                    <option value="FALSE">FALSE</option>
-                </select>
-                <button class="btn-action" onclick="addBucher()">Agregar</button>
+            <h1>Bucher - Meta Diaria (5 Hojas)</h1>
+            <div style="background: var(--card-bg); padding: 20px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px;">
+                <h3 id="bucher-progress-title" style="margin-bottom: 10px;">Progreso de hoy: 0 / 5 hojas leídas</h3>
+                <div style="background: #eee; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
+                    <div id="bucher-bar" style="background: var(--primary); width: 0%; height: 100%; transition: width 0.3s;"></div>
+                </div>
             </div>
-            <div id="loading-bucher" class="loading-text">Conéctate a Google para sincronizar tus libros...</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 140px; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="bucher-titulo" placeholder="Libro / Tema / Páginas">
+                <input type="number" id="bucher-hojas" placeholder="Hojas leídas hoy" value="5">
+                <button class="btn-action" onclick="addBucher()">Registrar</button>
+            </div>
+            <div id="loading-bucher" class="loading-text">Sincronizando registros de lectura...</div>
             <table class="data-table" id="table-bucher-container" style="display:none;">
-                <thead><tr><th>Tema / Página</th><th>Leído</th></tr></thead>
+                <thead><tr><th>Libro / Registro</th><th>Hojas Leídas</th><th>Fecha / Estado</th></tr></thead>
                 <tbody id="table-bucher"></tbody>
             </table>
         </div>
@@ -397,37 +181,51 @@
         <!-- VOCABULARIO -->
         <div id="vocabulario" class="section-container">
             <h1>Vocabulario (Práctica)</h1>
-            <div id="loading-vocab" class="loading-text">Conéctate a Google para sincronizar tu vocabulario...</div>
+            <div id="loading-vocab" class="loading-text">Cargando vocabulario...</div>
             <div class="vocab-card" id="vocab-card-ui" style="display:none;">
-                <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1 • Sustantivo</span>
+                <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1</span>
                 <div class="vocab-word" id="vocab-word">-</div>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p>
                 <div class="vocab-options" id="vocab-options-container"></div>
-                <button class="btn-action" style="margin-top: 20px; width: 100%;" onclick="loadNextVocab()">Siguiente palabra</button>
+                <button class="btn-action" style="margin-top: 20px; width: 100%; padding: 12px;" onclick="loadNextVocab()">Siguiente palabra</button>
+            </div>
+        </div>
+
+        <!-- LECTURAS E HISTORIAS -->
+        <div id="lecturas" class="section-container">
+            <h1>Lecturas en Alemán</h1>
+            <div class="story-box">
+                <h3>Der verirrte Tourist in Berlin (Historia Humorística Corta)</h3>
+                <p>Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: <em>„Ich möchte bitte ein großes Bier!“</em></p>
+                <p>Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: <em>„Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!“</em></p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 10px;">
+                    💡 <strong>Vocabulario clave:</strong><br>
+                    • <em>sich verirren</em> = perderse<br>
+                    • <em>die Bestellung</em> = el pedido<br>
+                    • <em>definitiv</em> = definitivamente
+                </p>
             </div>
         </div>
     </main>
 
-    <!-- Modal Reproductor YouTube flotante -->
+    <!-- Modal Reproductor YouTube -->
     <div id="modal-player">
         <div class="modal-content">
             <button class="close-modal" onclick="closePlayerModal()">&times;</button>
-            <h3 id="modal-title" style="font-size: 1.1rem; padding-right: 30px;">Reproduciendo Podcast</h3>
+            <h3 id="modal-title" style="font-size: 1.1rem; padding-right: 30px; margin-bottom: 10px;">Reproduciendo Podcast</h3>
             <div class="video-container">
                 <div id="youtube-player-slot"></div>
             </div>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">💡 Consejo: Al reproducir en la PWA instalada, el audio del dispositivo puede mantenerse activo al cambiar de app según la configuración de tu navegador móvil.</p>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = '205229444634-rrrplb3vigmcr9gs2elcnc8hbiv8fd14.apps.googleusercontent.com';
         const SPREADSHEET_ID = '1ZwTNP9h2WY9d4PgsovO2Vet5ZQyBshk2hpoSrA5CqBQ';
-        // Permiso completo de lectura y escritura en Google Sheets
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
         let tokenClient;
-        let accessToken = null;
+        let accessToken = localStorage.getItem('deu_access_token');
         let globalVocabData = [];
         let currentVocabIndex = 0;
 
@@ -443,26 +241,41 @@
                 client_id: CLIENT_ID,
                 scope: SCOPES,
                 callback: (resp) => {
-                    if (resp.error !== undefined) {
-                        console.error(resp);
-                        return;
-                    }
+                    if (resp.error !== undefined) { console.error(resp); return; }
                     accessToken = resp.access_token;
-                    document.getElementById('auth-button').innerText = 'Desconectado';
-                    document.getElementById('auth-button').style.background = '#333';
-                    document.getElementById('user-status').innerText = 'Sincronizado con Google';
+                    localStorage.setItem('deu_access_token', accessToken);
+                    updateAuthUI(true);
                     fetchAllSheetsData();
                 }
             });
+
+            if (accessToken) {
+                updateAuthUI(true);
+                fetchAllSheetsData();
+            }
         };
+
+        function updateAuthUI(isConnected) {
+            const btn = document.getElementById('auth-button');
+            const status = document.getElementById('user-status');
+            if (isConnected) {
+                btn.innerText = 'Desconectar';
+                btn.style.background = '#333';
+                status.innerText = 'Sincronizado con Google';
+            } else {
+                btn.innerText = 'Conectar Google';
+                btn.style.background = 'var(--text-main)';
+                status.innerText = 'Desconectado';
+            }
+        }
 
         function handleAuthClick() {
             if (!accessToken) {
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             } else {
                 accessToken = null;
-                document.getElementById('auth-button').innerText = 'Conectar Google';
-                document.getElementById('user-status').innerText = 'Desconectado';
+                localStorage.removeItem('deu_access_token');
+                updateAuthUI(false);
             }
         }
 
@@ -471,24 +284,61 @@
 
             // Podcast (A:D)
             loadSheetRange('Podcast!A:D', 'table-podcast', 'loading-podcast', 'table-podcast-container', (row, index) => {
-                const badgeClass = row[3] === 'Visto' ? 'yes' : 'no';
+                const isVisto = row[3] === 'Visto';
+                const badgeClass = isVisto ? 'yes' : 'no';
                 const videoId = extractYouTubeID(row[2]);
-                const btnHtml = videoId ? `<button class="table-link" onclick="openPlayerModal('${videoId}', '${encodeURIComponent(row[1] || 'Podcast')} ')">Escuchar / Ver</button>` : `<a class="table-link" href="${row[2]}" target="_blank">Enlace externo</a>`;
-                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${btnHtml}</td><td><span class="badge ${badgeClass}">${row[3] || 'NO'}</span></td>`;
+                const btnHtml = videoId ? `<button class="table-link" onclick="openPlayerModal('${videoId}', '${encodeURIComponent(row[1] || 'Podcast')} ')">Escuchar</button>` : `<a class="table-link" href="${row[2]}" target="_blank">Enlace</a>`;
+                const toggleBtn = `<button class="table-link" style="color:var(--text-main);" onclick="togglePodcastStatus(${index + 2}, '${row[3]}')">Cambiar</button>`;
+                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${btnHtml}</td><td><span class="badge ${badgeClass}">${row[3] || 'NO'}</span></td><td>${toggleBtn}</td>`;
             });
 
-            // Kinos (A:B)
-            loadSheetRange('Kinos!A:B', 'table-kinos', 'loading-kinos', 'table-kinos-container', (row) => {
-                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td>`;
+            // Kinos (A:B) -> Separar pendientes y vistas si agregaste columna de estado o simulando
+            loadSheetRangeCustom('Kinos!A:C', (rows) => {
+                document.getElementById('loading-kinos').style.display = 'none';
+                document.getElementById('table-kinos-container').style.display = 'table';
+                const tbody = document.getElementById('table-kinos');
+                const tbodyVistas = document.getElementById('table-kinos-vistas');
+                tbody.innerHTML = ''; tbodyVistas.innerHTML = '';
+                
+                let countVistas = 0;
+                if(rows && rows.length > 1) {
+                    for(let i=1; i<rows.length; i++) {
+                        const r = rows[i];
+                        const rowNum = i + 1;
+                        const estado = r[2] || 'Pendiente';
+                        if(estado === 'Vista') {
+                            countVistas++;
+                            tbodyVistas.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`;
+                        } else {
+                            tbody.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]}</td><td><button class="table-link" onclick="marcarKinoVista(${rowNum})">✔ Vista</button></td></tr>`;
+                        }
+                    }
+                }
+                if(countVistas === 0) tbodyVistas.innerHTML = `<tr><td colspan="2" style="color:var(--text-muted); text-align:center;">Ninguna película vista aún</td></tr>`;
             });
 
-            // Bucher (A:B)
-            loadSheetRange('Bucher!A:B', 'table-bucher', 'loading-bucher', 'table-bucher-container', (row) => {
-                const badgeClass = row[1] === 'TRUE' ? 'yes' : 'no';
-                return `<td>${row[0] || ''}</td><td><span class="badge ${badgeClass}">${row[1] || ''}</span></td>`;
+            // Bucher (A:C) -> Tema, Hojas, Estado
+            loadSheetRangeCustom('Bucher!A:C', (rows) => {
+                document.getElementById('loading-bucher').style.display = 'none';
+                document.getElementById('table-bucher-container').style.display = 'table';
+                const tbody = document.getElementById('table-bucher');
+                tbody.innerHTML = '';
+                let totalHoy = 0;
+                if(rows && rows.length > 1) {
+                    for(let i=1; i<rows.length; i++) {
+                        const r = rows[i];
+                        const hojas = parseInt(r[1]) || 0;
+                        totalHoy += hojas;
+                        tbody.innerHTML += `<tr><td>${r[0]}</td><td><b>${hojas} hojas</b></td><td><span class="badge yes">${r[2] || 'Leído'}</span></td></tr>`;
+                    }
+                }
+                // Actualizar barra de progreso (Meta: 5 hojas)
+                const porcentaje = Math.min((totalHoy / 5) * 100, 100);
+                document.getElementById('bucher-progress-title').innerText = `Progreso acumulado / hoy: ${totalHoy} / 5 hojas`;
+                document.getElementById('bucher-bar').style.width = `${porcentaje}%`;
             });
 
-            // Vocabulario (A:G) -> Nivel, Categoria, Palabra, Opcion_correcta, Opcion_2, Opcion_3, Opcion_4
+            // Vocabulario (A:G)
             loadSheetRangeCustom('Vocabulario!A:G', (rows) => {
                 document.getElementById('loading-vocab').style.display = 'none';
                 document.getElementById('vocab-card-ui').style.display = 'block';
@@ -539,12 +389,8 @@
             } catch (err) { console.error(err); }
         }
 
-        // Escritura en Google Sheets (Append)
         async function appendToSheet(rangeTab, valuesArray, callback) {
-            if (!accessToken) {
-                alert("Por favor conéctate a Google primero para guardar datos.");
-                return;
-            }
+            if (!accessToken) { alert("Conéctate a Google primero."); return; }
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${rangeTab}:append?valueInputOption=USER_ENTERED`;
             try {
                 const response = await fetch(url, {
@@ -552,11 +398,31 @@
                     headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ values: [valuesArray] })
                 });
-                if(response.ok) {
-                    if(callback) callback();
-                    fetchAllSheetsData();
-                }
-            } catch (err) { console.error("Error al escribir:", err); }
+                if(response.ok) { if(callback) callback(); fetchAllSheetsData(); }
+            } catch (err) { console.error(err); }
+        }
+
+        // Actualizar celda específica (ej. cambiar Podcast a Visto o Kino a Vista)
+        async function updateCell(rangeCell, newValue) {
+            if (!accessToken) return;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${rangeCell}?valueInputOption=USER_ENTERED`;
+            try {
+                await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ values: [[newValue]] })
+                });
+                fetchAllSheetsData();
+            } catch (err) { console.error(err); }
+        }
+
+        function togglePodcastStatus(rowNumber, currentStatus) {
+            const nuevoEstado = currentStatus === 'Visto' ? 'NO' : 'Visto';
+            updateCell(`Podcast!D${rowNumber}`, nuevoEstado);
+        }
+
+        function marcarKinoVista(rowNumber) {
+            updateCell(`Kinos!C${rowNumber}`, 'Vista');
         }
 
         function addPodcast() {
@@ -576,7 +442,7 @@
             const t = document.getElementById('kino-titulo').value;
             const d = document.getElementById('kino-donde').value;
             if(!t) return;
-            appendToSheet('Kinos!A:B', [t, d], () => {
+            appendToSheet('Kinos!A:C', [t, d, 'Pendiente'], () => {
                 document.getElementById('kino-titulo').value = '';
                 document.getElementById('kino-donde').value = '';
             });
@@ -584,14 +450,14 @@
 
         function addBucher() {
             const t = document.getElementById('bucher-titulo').value;
-            const e = document.getElementById('bucher-estado').value;
+            const h = document.getElementById('bucher-hojas').value || '5';
             if(!t) return;
-            appendToSheet('Bucher!A:B', [t, e], () => {
+            const fecha = new Date().toLocaleDateString();
+            appendToSheet('Bucher!A:C', [t, h, fecha], () => {
                 document.getElementById('bucher-titulo').value = '';
             });
         }
 
-        // Extractor de ID de YouTube
         function extractYouTubeID(url) {
             if(!url) return null;
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -599,25 +465,22 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // Control Modal Podcast YouTube
         function openPlayerModal(videoId, title) {
             document.getElementById('modal-title').innerText = decodeURIComponent(title);
-            document.getElementById('youtube-player-slot').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            document.getElementById('youtube-player-slot').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             document.getElementById('modal-player').style.display = 'flex';
         }
 
         function closePlayerModal() {
             document.getElementById('modal-player').style.display = 'none';
-            document.getElementById('youtube-player-slot').innerHTML = ''; // Detiene el audio al cerrar
+            document.getElementById('youtube-player-slot').innerHTML = '';
         }
 
-        // Vocabulario Test Lógica
         function loadNextVocab() {
             if(!globalVocabData.length) return;
             const item = globalVocabData[currentVocabIndex];
-            document.getElementById('vocab-nivel-cat').innerText = `${item.nivel} • ${item.cat}`;
+            document.getElementById('vocab-nivel-cat').innerText = item.nivel;
             document.getElementById('vocab-word').innerText = item.palabra;
-            
             const container = document.getElementById('vocab-options-container');
             container.innerHTML = '';
             
@@ -628,26 +491,15 @@
                 btn.innerText = opt;
                 btn.onclick = () => {
                     if(opt === item.correcta) {
-                        btn.style.background = '#e6f4ea';
-                        btn.style.borderColor = '#137333';
-                        btn.style.color = '#137333';
+                        btn.style.background = '#e6f4ea'; btn.style.borderColor = '#137333'; btn.style.color = '#137333';
                         setTimeout(loadNextVocab, 700);
                     } else {
-                        btn.style.background = '#fce8e6';
-                        btn.style.borderColor = '#c5221f';
-                        btn.style.color = '#c5221f';
+                        btn.style.background = '#fce8e6'; btn.style.borderColor = '#c5221f'; btn.style.color = '#c5221f';
                     }
                 };
                 container.appendChild(btn);
             });
-
             currentVocabIndex = (currentVocabIndex + 1) % globalVocabData.length;
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-            });
         }
     </script>
 </body>
