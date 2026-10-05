@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU PRO PWA </title>
+    <title>DEU PRO PWA</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
     
@@ -17,6 +17,7 @@
             --text-muted: #666666;
             --primary: #dd0000;
             --primary-hover: #b30000;
+            --gold: #ffcc00;
             --border: #eaeaea;
             --radius: 12px;
         }
@@ -34,17 +35,19 @@
         }
         .logo-area { font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; padding-left: 12px; display: flex; align-items: center; gap: 10px; }
         .logo-area span { color: var(--primary); }
+        .logo-area b { color: var(--gold); text-shadow: 0 0 5px rgba(255,204,0,0.5); }
         .auth-container { margin-bottom: 24px; padding-left: 12px; }
 
         .nav-menu { display: flex; flex-direction: column; gap: 6px; list-style: none; overflow-y: auto; max-height: calc(100vh - 180px); }
         .nav-item { padding: 10px 14px; border-radius: var(--radius); font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
         .nav-item:hover { background-color: #f5f5f5; color: var(--text-main); }
-        .nav-item.active { background-color: var(--text-main); color: #fff; }
+        .nav-item.active { background-color: var(--text-main); color: var(--gold); font-weight: 700; border-left: 4px solid var(--gold); }
 
         main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 40px; }
         .section-container { display: none; max-width: 900px; width: 100%; margin: 0 auto; }
         .section-container.active { display: block; }
         h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
+        h1 span.gold { color: #d4af37; text-shadow: 0 0 8px rgba(212,175,55,0.3); }
 
         .form-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) 110px; gap: 10px; margin-bottom: 20px;
@@ -65,8 +68,7 @@
         .badge.yes { background-color: #e6f4ea; color: #137333; }
         .badge.no { background-color: #fce8e6; color: #c5221f; }
 
-        .btn-login { background-color: var(--text-main); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; width: 100%; }
-        .loading-text { color: var(--text-muted); font-style: italic; padding: 20px; text-align: center; }
+        .btn-login { background-color: var(--text-main); color: var(--gold); border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; width: 100%; }
 
         /* Vocabulario Card */
         .vocab-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; max-width: 500px; margin: 0 auto; }
@@ -81,28 +83,18 @@
         .btn-audio { background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #1e293b; }
         .btn-audio:hover { background: #cbd5e1; }
 
+        /* Estilo Duolingo Diario */
+        .duo-card { background: var(--card-bg); border: 2px solid #d4af37; border-radius: var(--radius); padding: 24px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); }
+        .duo-checkboxes { display: grid; grid-template-columns: repeat(auto-fit, minmax(45px, 1fr)); gap: 10px; margin: 20px 0; }
+        .duo-box-item { display: flex; flex-direction: column; align-items: center; background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+        .duo-box-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: #58cc02; cursor: pointer; }
+
         /* Modal Reproductor YouTube */
         #modal-player { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--card-bg); padding: 20px; border-radius: var(--radius); max-width: 600px; width: 90%; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        /* Estilos globales y acentos de la bandera alemana para la PWA */
-        .alemania-theme-border {
-            border-image: linear-gradient(to right, #000000, #DD0000, #FFCC00) 1;
-        }
-        
-        .gold-text-glow {
-            color: #FFCC00;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
-        }
-        
-        .badge-tricolor {
-            background: linear-gradient(135deg, #000000 33%, #DD0000 33%, #DD0000 66%, #FFCC00 66%);
-            height: 4px;
-            width: 100%;
-        }
 
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; overflow: auto; }
@@ -117,54 +109,58 @@
 <body>
 
     <aside>
-        <div class="logo-area">🇩🇪 <span>DEU</span></div>
+        <div class="logo-area">🇩🇪 <span>DEU</span> <b style="color:var(--gold);">PRO</b></div>
         <div class="auth-container">
             <button id="auth-button" class="btn-login" onclick="handleAuthClick()">Conectar Google</button>
-            <span id="user-status" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px;">Desconectado</span>
+            <span id="user-status" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px; text-align: center;">Desconectado</span>
         </div>
         <ul class="nav-menu">
             <li class="nav-item active" onclick="switchTab('podcast', this)">Podcast</li>
             <li class="nav-item" onclick="switchTab('kinos', this)">Kinos</li>
             <li class="nav-item" onclick="switchTab('bucher', this)">Bucher (Meta 5 Hojas)</li>
+            <li class="nav-item" onclick="switchTab('duolingo', this)">🦉 Duolingo Diario</li>
             <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario Pro</li>
             <li class="nav-item" onclick="switchTab('lecturas', this)">Lecturas & Noticias</li>
         </ul>
     </aside>
 
     <main>
-        <div id="duolingo-section" class="p-4 bg-gray-900 text-white rounded-xl shadow-lg border-2 border-yellow-500 mb-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold flex items-center gap-2">
-                    <span class="w-4 h-4 rounded-full bg-black border border-yellow-400"></span>
-                    <span class="w-4 h-4 rounded-full bg-red-600"></span>
-                    <span class="w-4 h-4 rounded-full bg-yellow-400"></span>
-                    Duolingo Tracker - Octubre
-                </h2>
-                <div class="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
-                    Meta Diaria: 10 Lecciones
+        <!-- DUOLINGO DIARIO -->
+        <div id="duolingo" class="section-container">
+            <h1>Meta Diaria de Duolingo <span class="gold">⭐</span></h1>
+            <div class="duo-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div>
+                        <h3 id="duo-date-title" style="font-size: 1.2rem; color: var(--text-main);">Fecha de hoy: 5 de octubre</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Marca tus 10 lecciones meta para hoy:</p>
+                    </div>
+                    <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 10px 16px; border-radius: 8px; text-align: right;">
+                        <span style="display: block; font-size: 0.75rem; color: #8d6e63; font-weight: bold;">ESTADO EN HOJA</span>
+                        <span id="duo-status-sheet" style="font-size: 0.9rem; font-weight: bold; color: #f57f17;">Sincronizando...</span>
+                    </div>
                 </div>
-            </div>
-        
-            <!-- Resumen del Mes -->
-            <div class="grid grid-cols-2 gap-4 mb-4 text-center">
-                <div class="bg-gray-800 p-3 rounded-lg border border-yellow-500/40">
-                    <span class="block text-gray-400 text-xs uppercase">Total CONTEO_OCT</span>
-                    <span id="total-mes-duo" class="text-2xl font-black text-yellow-400">0</span>
+
+                <!-- Los 10 Checkboxes del Día -->
+                <div class="duo-checkboxes" id="duo-daily-checkboxes">
+                    <!-- Generado por JS -->
                 </div>
-                <div class="bg-gray-800 p-3 rounded-lg border border-yellow-500/40">
-                    <span class="block text-gray-400 text-xs uppercase">Promedio / Estado</span>
-                    <span id="promedio-mes-duo" class="text-2xl font-black text-yellow-400">0.0</span>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border);">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">TOTAL MES (Celda C2)</span>
+                        <span id="duo-val-c2" style="font-size: 1.8rem; font-weight: 900; color: var(--primary);">0</span>
+                    </div>
+                    <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border);">
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">PROMEDIO DIARIO (Celda D2)</span>
+                        <span id="duo-val-d2" style="font-size: 1.8rem; font-weight: 900; color: #137333;">0.0</span>
+                    </div>
                 </div>
-            </div>
-        
-            <!-- Lista de Días con Checkboxes (Simulando la Hoja de Cálculo) -->
-            <div id="duo-days-list" class="space-y-2 max-h-60 overflow-y-auto pr-2">
-                <!-- Generado dinámicamente o estático por días -->
             </div>
         </div>
+
         <!-- PODCAST -->
         <div id="podcast" class="section-container active">
-            <h1>Podcast</h1>
+            <h1>Podcast <span class="gold">🎧</span></h1>
             <div class="form-grid">
                 <input type="text" id="pod-nivel" placeholder="Nivel (ej. B1)">
                 <input type="text" id="pod-titulo" placeholder="Título del Podcast">
@@ -184,7 +180,7 @@
 
         <!-- KINOS -->
         <div id="kinos" class="section-container">
-            <h1>Kinos (Películas y Series)</h1>
+            <h1>Kinos (Películas y Series) <span class="gold">🎬</span></h1>
             <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px; margin-bottom: 20px;">
                 <input type="text" id="kino-titulo" placeholder="Película o serie...">
                 <input type="text" id="kino-donde" placeholder="Dónde (ej. Cuevana)...">
@@ -207,7 +203,7 @@
 
         <!-- BUCHER -->
         <div id="bucher" class="section-container">
-            <h1>Bucher - Meta Diaria (5 Hojas)</h1>
+            <h1>Bucher - Meta Diaria (5 Hojas) <span class="gold">📖</span></h1>
             <div style="background: var(--card-bg); padding: 20px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px;">
                 <h3 id="bucher-progress-title" style="margin-bottom: 10px;">Progreso de hoy: 0 / 5 hojas leídas</h3>
                 <div style="background: #eee; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
@@ -228,7 +224,7 @@
 
         <!-- VOCABULARIO -->
         <div id="vocabulario" class="section-container">
-            <h1>Vocabulario Pro & Filtro de Niveles</h1>
+            <h1>Vocabulario Pro & Filtro de Niveles <span class="gold">🔤</span></h1>
             
             <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 14px; border: 1px solid var(--border); border-radius: var(--radius);">
                 <label for="filtro-nivel" style="font-weight: 600; font-size: 0.95rem;">Filtrar por nivel:</label>
@@ -254,7 +250,7 @@
 
         <!-- LECTURAS E HISTORIAS -->
         <div id="lecturas" class="section-container">
-            <h1>Lecturas & Noticias en Alemán</h1>
+            <h1>Lecturas & Noticias en Alemán <span class="gold">📰</span></h1>
             
             <div class="story-box">
                 <h3>
@@ -263,26 +259,6 @@
                 </h3>
                 <p>Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: <em>„Ich möchte bitte ein großes Bier!“</em></p>
                 <p>Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: <em>„Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!“</em></p>
-                <p style="color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 10px;">
-                    💡 <strong>Vocabulario clave:</strong><br>
-                    • <em>sich verirren</em> = perderse<br>
-                    • <em>die Bestellung</em> = el pedido<br>
-                    • <em>definitiv</em> = definitivamente
-                </p>
-            </div>
-
-            <div class="story-box">
-                <h3>
-                    <span>Kurznachricht: Künstliche Intelligenz im Alltag (Noticia C1)</span>
-                    <button class="btn-audio" onclick="leerTexto('Immer mehr Menschen nutzen generative Künstliche Intelligenz, um ihre tägliche Arbeit zu optimieren. Experten betonen jedoch, dass kritisches Denken und menschliche Kreativität durch Technologie keineswegs ersetzt werden können.')">🔊 Escuchar</button>
-                </h3>
-                <p>Immer mehr Menschen nutzen generative Künstliche Intelligenz, um ihre tägliche Arbeit zu optimieren. Experten betonen jedoch, dass kritisches Denken und menschliche Kreativität durch Technologie keineswegs ersetzt werden können.</p>
-                <p style="color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 10px;">
-                    💡 <strong>Vocabulario clave:</strong><br>
-                    • <em>betonen</em> = recalcar / destacar<br>
-                    • <em>keineswegs</em> = de ninguna manera<br>
-                    • <em>ersetzen</em> = reemplazar
-                </p>
             </div>
         </div>
     </main>
@@ -333,6 +309,9 @@
                 updateAuthUI(true);
                 fetchAllSheetsData();
             }
+            
+            // Inicializar checkboxes de Duolingo de hoy
+            renderizarDuolingoDiario(0);
         };
 
         function updateAuthUI(isConnected) {
@@ -415,6 +394,15 @@
                 const porcentaje = Math.min((totalHoy / 5) * 100, 100);
                 document.getElementById('bucher-progress-title').innerText = `Progreso acumulado / hoy: ${totalHoy} / 5 hojas`;
                 document.getElementById('bucher-bar').style.width = `${porcentaje}%`;
+            });
+
+            // Duolingo Totales (Celda C2 y D2 de tu hoja de Duolingo)
+            loadSheetRangeCustom('Duolingo!C2:D2', (rows) => {
+                if(rows && rows.length > 0) {
+                    document.getElementById('duo-val-c2').innerText = rows[0][0] || '0';
+                    document.getElementById('duo-val-d2').innerText = rows[0][1] || '0.0';
+                    document.getElementById('duo-status-sheet').innerText = 'Sincronizado con Sheet';
+                }
             });
 
             // Vocabulario (A:G)
@@ -536,6 +524,41 @@
             });
         }
 
+        // --- LÓGICA DUOLINGO DIARIO (Celda correspondiente al 5 de octubre) ---
+        // Asumiendo que el 5 de octubre está en la fila 5 de tu hoja de Duolingo
+        const DUO_ROW_HOY = 5; 
+
+        function renderizarDuolingoDiario(leccionesMarcadas) {
+            const container = document.getElementById('duo-daily-checkboxes');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= 10; i++) {
+                const item = document.createElement('div');
+                item.className = 'duo-box-item';
+                
+                const isChecked = i <= leccionesMarcadas;
+                item.innerHTML = `
+                    <span style="font-size: 0.75rem; font-weight: bold; color: var(--text-muted); margin-bottom: 4px;">#${i}</span>
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="actualizarDuolingoHoy(${i}, this.checked)">
+                `;
+                container.appendChild(item);
+            }
+        }
+
+        async function actualizarDuolingoHoy(numeroLeccion, isChecked) {
+            const nuevaCantidad = isChecked ? numeroLeccion : numeroLeccion - 1;
+            renderizarDuolingoDiario(nuevaCantidad);
+            
+            // Actualiza la celda de la lección del día en tu hoja de cálculo (ej. Columna B, fila 5 para 5 de octubre)
+            if (accessToken) {
+                document.getElementById('duo-status-sheet').innerText = 'Guardando...';
+                await updateCell(`Duolingo!B${DUO_ROW_HOY}`, nuevaCantidad);
+            } else {
+                // Guardado local si no hay sesión activa de Google
+                localStorage.setItem('duo_hoy_local', nuevaCantidad);
+            }
+        }
+
         function extractYouTubeID(url) {
             if(!url) return null;
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -554,7 +577,6 @@
             document.getElementById('youtube-player-slot').innerHTML = '';
         }
 
-        // Filtro de Vocabulario por Nivel
         function cambiarFiltroNivel() {
             const nivelSeleccionado = document.getElementById('filtro-nivel').value;
             if (nivelSeleccionado === 'TODOS') {
@@ -597,223 +619,17 @@
             currentVocabIndex = (currentVocabIndex + 1) % filteredVocabData.length;
         }
 
-        // Lector de voz nativo (Text-to-Speech)
         function leerTexto(texto) {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Detiene cualquier audio anterior
+                window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'de-DE'; // Configura el acento en alemán
-                utterance.rate = 0.9; // Velocidad ligeramente pausada ideal para estudio
+                utterance.lang = 'de-DE';
+                utterance.rate = 0.9;
                 window.speechSynthesis.speak(utterance);
             } else {
                 alert("Tu navegador no soporta la reproducción de voz.");
             }
         }
-
-        // Base de datos de respaldo offline (por si no hay internet o Google Sheets falla)
-        const OFFLINE_VOCAB_BACKEND = [
-            { nivel: "A2", cat: "Verbos", palabra: "entwickeln", correcta: "desarrollar", opciones: ["desarrollar", "descubrir", "destruir", "decidir"] },
-            { nivel: "B1", cat: "Adjetivos", palabra: "anstrengend", correcta: "agotador", opciones: ["agotador", "divertido", "aburrido", "sencillo"] },
-            { nivel: "B2", cat: "Verbos", palabra: "berücksichtigen", correcta: "tener en cuenta", opciones: ["tener en cuenta", "olvidar", "ignorar", "repetir"] },
-            { nivel: "C1", cat: "Verbos", palabra: "beanspruchen", correcta: "reclamar / exigir", opciones: ["reclamar / exigir", "regalar", "ignorar", "soltar"] },
-            { nivel: "C2", cat: "Verbos", palabra: "erörtern", correcta: "debatir / examinar a fondo", opciones: ["debatir / examinar a fondo", "callar", "aceptar", "huir"] }
-        ];
-        
-        async function fetchAllSheetsData() {
-            // Intentamos cargar desde Google Sheets si hay token y red
-            if (accessToken) {
-                try {
-                    await cargarDatosDesdeGoogle();
-                    return; // Si triunfa, termina aquí
-                } catch (error) {
-                    console.warn("Fallo la conexión con Google Sheets. Cambiando a modo offline...", error);
-                }
-            }
-            
-            // Si no hay token o falló la red, cargamos el respaldo local
-            cargarDatosOffline();
-        }
-        
-        async function cargarDatosDesdeGoogle() {
-            // Vocabulario (A:G) desde Google Sheets
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Vocabulario!A:G`;
-            const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
-            if (!response.ok) throw new Error("Error al conectar con la API");
-            
-            const data = await response.json();
-            document.getElementById('loading-vocab').style.display = 'none';
-            document.getElementById('vocab-card-ui').style.display = 'block';
-            
-            globalVocabData = [];
-            if (data.values && data.values.length > 1) {
-                for (let i = 1; i < data.values.length; i++) {
-                    const r = data.values[i];
-                    if (r[2] && r[3]) {
-                        globalVocabData.push({
-                            nivel: (r[0] || 'A2').trim().toUpperCase(),
-                            cat: r[1] || 'General',
-                            palabra: r[2],
-                            correcta: r[3],
-                            opciones: [r[3], r[4], r[5], r[6]].filter(Boolean)
-                        });
-                    }
-                }
-                // Guardamos una copia en el navegador para uso futuro offline
-                localStorage.setItem('deu_vocab_cache', JSON.stringify(globalVocabData));
-                cambiarFiltroNivel();
-            }
-        }
-        
-        function cargarDatosOffline() {
-            document.getElementById('loading-vocab').style.display = 'none';
-            document.getElementById('vocab-card-ui').style.display = 'block';
-        
-            // Verificamos si tenemos una caché guardada previamente, si no usamos el respaldo básico
-            const cachedData = localStorage.getItem('deu_vocab_cache');
-            if (cachedData) {
-                globalVocabData = JSON.parse(cachedData);
-            } else {
-                globalVocabData = OFFLINE_VOCAB_BACKEND;
-            }
-            
-            // Notificamos sutilmente al usuario que está offline
-            document.getElementById('vocab-word').title = "Modo Offline Activo";
-            cambiarFiltroNivel();
-        }
-
-        async function cargarLecturasDesdeGoogle() {
-            if (accessToken) {
-                try {
-                    // Suponiendo que la pestaña en tu Sheet se llama 'Lecturas' (Columnas A a E)
-                    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Lecturas!A:E`;
-                    const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
-                    
-                    if (!response.ok) throw new Error("Error al conectar con la hoja de Lecturas");
-                    
-                    const data = await response.json();
-                    globalLecturasData = [];
-                    
-                    if (data.values && data.values.length > 1) {
-                        for (let i = 1; i < data.values.length; i++) {
-                            const r = data.values[i];
-                            if (r[2] && r[3]) { // Si tiene Título y Texto
-                                globalLecturasData.push({
-                                    nivel: (r[0] || 'B1').trim().toUpperCase(),
-                                    tipo: r[1] || 'Artikel',
-                                    titulo: r[2],
-                                    texto: r[3],
-                                    vocabulario: r[4] || ''
-                                });
-                            }
-                        }
-                        // Guardamos en caché local para modo offline
-                        localStorage.setItem('deu_lecturas_cache', JSON.stringify(globalLecturasData));
-                        renderizarLecturas();
-                        return;
-                    }
-                } catch (error) {
-                    console.warn("No se pudieron cargar las lecturas online, cargando caché local...", error);
-                }
-            }
-            
-            // Si no hay red o falló, cargamos del almacenamiento local
-            cargarLecturasOffline();
-        }
-        
-        function cargarLecturasOffline() {
-            const cachedLecturas = localStorage.getItem('deu_lecturas_cache');
-            if (cachedLecturas) {
-                globalLecturasData = JSON.parse(cachedLecturas);
-                renderizarLecturas();
-            } else {
-                // Fallback por si la caché está vacía la primera vez que entras sin internet
-                globalLecturasData = [
-                    { nivel: "B2", tipo: "Offline", titulo: "Keine Verbindung", texto: "Bitte verbinden Sie sich einmal mit dem Internet, um Ihre 30 Geschichten zu synchronisieren.", vocabulario: "die Verbindung" }
-                ];
-                renderizarLecturas();
-            }
-        }
-        let octubreDuolingoData = [
-            { fecha: "5 oct", lecciones: 0 },
-            { fecha: "6 oct", lecciones: 0 },
-            { fecha: "7 oct", lecciones: 0 },
-            { fecha: "8 oct", lecciones: 0 },
-            { fecha: "9 oct", lecciones: 0 },
-            { fecha: "10 oct", lecciones: 0 },
-            { fecha: "11 oct", lecciones: 0 },
-            { fecha: "12 oct", lecciones: 0 },
-            { fecha: "13 oct", lecciones: 0 },
-            { fecha: "14 oct", lecciones: 0 },
-            { fecha: "15 oct", lecciones: 0 },
-            { fecha: "16 oct", lecciones: 0 },
-            { fecha: "17 oct", lecciones: 0 },
-            { fecha: "18 oct", lecciones: 0 },
-            { fecha: "19 oct", lecciones: 0 },
-            { fecha: "20 oct", lecciones: 0 },
-            { fecha: "21 oct", lecciones: 0 },
-            { fecha: "22 oct", lecciones: 0 },
-            { fecha: "23 oct", lecciones: 0 },
-            { fecha: "24 oct", lecciones: 0 },
-            { fecha: "25 oct", lecciones: 0 },
-            { fecha: "26 oct", lecciones: 0 },
-            { fecha: "27 oct", lecciones: 0 },
-            { fecha: "28 oct", lecciones: 0 },
-            { fecha: "29 oct", lecciones: 0 },
-            { fecha: "30 oct", lecciones: 0 },
-            { fecha: "31 oct", lecciones: 0 }
-        ];
-        
-        function renderizarDuolingoTracker() {
-            const contenedor = document.getElementById('duo-days-list');
-            contenedor.innerHTML = '';
-            
-            let totalConteo = 0;
-            
-            octubreDuolingoData.forEach((item, index) => {
-                totalConteo += item.lecciones;
-                
-                const row = document.createElement('div');
-                row.className = "flex items-center justify-between bg-gray-800/60 p-2 rounded border border-gray-700 hover:border-yellow-400 transition-colors";
-                
-                row.innerHTML = `
-                    <span class="font-semibold text-gray-300 w-20">${item.fecha}</span>
-                    <div class="flex items-center gap-1">
-                        <!-- Checkboxes rápidos para completar de a 1 lección hasta llegar a 10 -->
-                        <div class="flex gap-1">
-                            ${[...Array(10)].map((_, i) => `
-                                <input type="checkbox" 
-                                    class="w-4 h-4 accent-yellow-500 cursor-pointer rounded" 
-                                    ${i < item.lecciones ? 'checked' : ''} 
-                                    onchange="actualizarLeccionesDuo(${index},${i + 1}, this.checked)">
-                            `).join('')}
-                        </div>
-                    </div>
-                    <span class="bg-black/50 text-yellow-400 font-bold px-2 py-0.5 rounded text-sm w-10 text-center">${item.lecciones}</span>
-                `;
-                contenedor.appendChild(row);
-            });
-            
-            document.getElementById('total-mes-duo').innerText = totalConteo;
-            document.getElementById('promedio-mes-duo').innerText = (totalConteo / octubreDuolingoData.filter(d => d.lecciones > 0).length || 0).toFixed(1);
-            
-            // Guardamos en caché local para persistencia offline
-            localStorage.setItem('deu_duolingo_cache', JSON.stringify(octubreDuolingoData));
-        }
-        
-        function actualizarLeccionesDuo(diaIndex, cantidadMarcada, isChecked) {
-            // Si marca el checkbox de la posición X, el total de lecciones de ese día se actualiza
-            octubreDuolingoData[diaIndex].lecciones = isChecked ? cantidadMarcada : cantidadMarcada - 1;
-            renderizarDuolingoTracker();
-        }
-        
-        // Cargar al iniciar
-        window.addEventListener('DOMContentLoaded', () => {
-            const cachedDuo = localStorage.getItem('deu_duolingo_cache');
-            if (cachedDuo) {
-                octubreDuolingoData = JSON.parse(cachedDuo);
-            }
-            renderizarDuolingoTracker();
-        });
     </script>
 </body>
 </html>
