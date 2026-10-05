@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU - Panel de Listas</title>
+    <title>DEU - Panel Minimalista</title>
+    <!-- Enlace al Manifest para convertirla en PWA -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Icono de la bandera de Alemania como Emoji en Favicon (o puedes cambiarlo por un SVG/PNG) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
+    
     <style>
         :root {
-            --bg-color: #f8fafc;
+            --bg-color: #fafafa;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --border: #e2e8f0;
+            --text-main: #111111;
+            --text-muted: #666666;
+            /* Paleta inspirada en la bandera de Alemania: Negro, Rojo, Oro */
+            --primary: #dd0000;         /* Rojo alemán elegante */
+            --primary-hover: #b30000;
+            --accent-gold: #ffcc00;     /* Oro alemán para detalles */
+            --border: #eaeaea;
             --radius: 12px;
         }
 
@@ -39,15 +46,34 @@
             display: flex;
             flex-direction: column;
             padding: 24px 16px;
+            position: relative;
+        }
+
+        /* Pequeño detalle superior con los 3 colores alemanes */
+        aside::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #000000 33.33%, #dd0000 33.33% 66.66%, #ffcc00 66.66%);
         }
 
         .logo-area {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--text-main);
             letter-spacing: -0.5px;
             margin-bottom: 32px;
             padding-left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area span {
+            color: var(--primary);
         }
 
         .nav-menu {
@@ -67,12 +93,12 @@
         }
 
         .nav-item:hover {
-            background-color: #f1f5f9;
+            background-color: #f5f5f5;
             color: var(--text-main);
         }
 
         .nav-item.active {
-            background-color: var(--primary);
+            background-color: var(--text-main);
             color: #ffffff;
         }
 
@@ -157,7 +183,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.01);
             transition: transform 0.1s;
         }
 
@@ -168,7 +194,7 @@
         .delete-btn {
             background: none;
             border: none;
-            color: #ef4444;
+            color: var(--primary);
             cursor: pointer;
             font-weight: 600;
             padding: 4px 8px;
@@ -176,7 +202,7 @@
         }
 
         .delete-btn:hover {
-            background-color: #fee2e2;
+            background-color: #fff1f1;
             border-radius: 6px;
         }
 
@@ -190,6 +216,9 @@
             aside {
                 width: 100%;
                 padding: 16px;
+            }
+            aside::before {
+                display: none;
             }
             .nav-menu {
                 flex-direction: row;
@@ -205,7 +234,7 @@
 
     <!-- Menú de Navegación Lateral -->
     <aside>
-        <div class="logo-area">DEU</div>
+        <div class="logo-area">🇩🇪 <span>DEU</span></div>
         <ul class="nav-menu">
             <li class="nav-item active" onclick="switchTab('duolingo', this)">Duolingo</li>
             <li class="nav-item" onclick="switchTab('podcast', this)">Podcast</li>
@@ -295,6 +324,15 @@
             
             list.appendChild(li);
             input.value = '';
+        }
+
+        // Registro del Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito', reg))
+                    .catch(err => console.log('Error al registrar Service Worker', err));
+            });
         }
     </script>
 </body>
