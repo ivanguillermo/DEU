@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU - Panel Minimalista</title>
-    <!-- Enlace al Manifest para convertirla en PWA -->
+    <title>DEU - Panel Funcional</title>
     <link rel="manifest" href="manifest.json">
-    <!-- Icono de la bandera de Alemania como Emoji en Favicon (o puedes cambiarlo por un SVG/PNG) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
     
     <style>
@@ -15,10 +13,9 @@
             --card-bg: #ffffff;
             --text-main: #111111;
             --text-muted: #666666;
-            /* Paleta inspirada en la bandera de Alemania: Negro, Rojo, Oro */
-            --primary: #dd0000;         /* Rojo alemán elegante */
+            --primary: #dd0000;
             --primary-hover: #b30000;
-            --accent-gold: #ffcc00;     /* Oro alemán para detalles */
+            --accent-gold: #ffcc00;
             --border: #eaeaea;
             --radius: 12px;
         }
@@ -38,7 +35,6 @@
             overflow: hidden;
         }
 
-        /* Barra Lateral de Navegación */
         aside {
             width: 260px;
             background-color: var(--card-bg);
@@ -49,7 +45,6 @@
             position: relative;
         }
 
-        /* Pequeño detalle superior con los 3 colores alemanes */
         aside::before {
             content: '';
             position: absolute;
@@ -102,7 +97,6 @@
             color: #ffffff;
         }
 
-        /* Área Principal */
         main {
             flex: 1;
             display: flex;
@@ -113,7 +107,7 @@
 
         .section-container {
             display: none;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             margin: 0 auto;
         }
@@ -129,67 +123,91 @@
             letter-spacing: -0.5px;
         }
 
-        /* Formularios y Controles de Listas */
-        .input-group {
-            display: flex;
-            gap: 12px;
+        /* Formularios y Inputs en Línea */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) 120px;
+            gap: 10px;
             margin-bottom: 24px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 16px;
+            background: var(--card-bg);
+            padding: 16px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            outline: none;
-            font-size: 1rem;
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            transition: border-color 0.2s;
         }
 
-        input[type="text"]:focus {
+        input, select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.95rem;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        input:focus, select:focus {
             border-color: var(--primary);
         }
 
-        button {
-            padding: 0 20px;
+        button.btn-action {
             background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: var(--radius);
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s;
         }
 
-        button:hover {
+        button.btn-action:hover {
             background-color: var(--primary-hover);
         }
 
-        /* Listados Limpios */
-        .simple-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .list-item {
-            background-color: var(--card-bg);
-            padding: 16px;
+        /* Tablas de Listados */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.01);
-            transition: transform 0.1s;
+            overflow: hidden;
         }
 
-        .list-item span {
-            font-size: 1rem;
+        .data-table th, .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
         }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        a.table-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a.table-link:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge.yes { background-color: #e6f4ea; color: #137333; }
+        .badge.no { background-color: #fce8e6; color: #c5221f; }
 
         .delete-btn {
             background: none;
@@ -197,42 +215,59 @@
             color: var(--primary);
             cursor: pointer;
             font-weight: 600;
-            padding: 4px 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+        .delete-btn:hover { text-decoration: underline; }
+
+        /* Estilo para Vocabulario (Flashcard / Test rápido) */
+        .vocab-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .vocab-word {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 16px 0;
+            color: var(--primary);
+        }
+        .vocab-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .option-btn {
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #fff5f5;
         }
 
-        .delete-btn:hover {
-            background-color: #fff1f1;
-            border-radius: 6px;
-        }
-
-        /* Responsividad básica */
         @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-                height: auto;
-                overflow: auto;
-            }
-            aside {
-                width: 100%;
-                padding: 16px;
-            }
-            aside::before {
-                display: none;
-            }
-            .nav-menu {
-                flex-direction: row;
-                overflow-x: auto;
-            }
-            main {
-                padding: 20px;
-            }
+            body { flex-direction: column; height: auto; overflow: auto; }
+            aside { width: 100%; padding: 16px; }
+            aside::before { display: none; }
+            .nav-menu { flex-direction: row; overflow-x: auto; }
+            main { padding: 20px; }
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Menú de Navegación Lateral -->
     <aside>
         <div class="logo-area">🇩🇪 <span>DEU</span></div>
         <ul class="nav-menu">
@@ -244,94 +279,213 @@
         </ul>
     </aside>
 
-    <!-- Contenido de las Secciones -->
     <main>
-        <!-- Sección Duolingo -->
+        <!-- DUOLINGO -->
         <div id="duolingo" class="section-container active">
             <h1>Duolingo</h1>
-            <div class="input-group">
-                <input type="text" id="input-duolingo" placeholder="Añadir meta o lección de hoy...">
-                <button onclick="addItem('duolingo')">Agregar</button>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="input-duolingo" placeholder="Meta o lección de hoy..." style="flex:1;">
+                <button class="btn-action" onclick="addSimpleItem('duolingo')">Agregar</button>
             </div>
-            <ul id="list-duolingo" class="simple-list"></ul>
+            <table class="data-table">
+                <thead><tr><th>Meta / Actividad</th><th style="width: 80px;">Acción</th></tr></thead>
+                <tbody id="table-duolingo"></tbody>
+            </table>
         </div>
 
-        <!-- Sección Podcast -->
+        <!-- PODCAST -->
         <div id="podcast" class="section-container">
             <h1>Podcast</h1>
-            <div class="input-group">
-                <input type="text" id="input-podcast" placeholder="Nuevo episodio o programa...">
-                <button onclick="addItem('podcast')">Agregar</button>
+            <div class="form-grid">
+                <input type="text" id="pod-nivel" placeholder="Nivel (ej. B1)">
+                <input type="text" id="pod-titulo" placeholder="Título del Podcast">
+                <input type="text" id="pod-link" placeholder="Link de YouTube">
+                <select id="pod-estado">
+                    <option value="NO">NO</option>
+                    <option value="Visto">Visto</option>
+                </select>
+                <button class="btn-action" onclick="addPodcast()">Añadir</button>
             </div>
-            <ul id="list-podcast" class="simple-list"></ul>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Nivel</th><th>Podcast</th><th>Enlace</th><th>Estado</th><th style="width: 60px;"></th></tr>
+                </thead>
+                <tbody id="table-podcast">
+                    <tr><td>B1</td><td>Was passiert mit unserem Müll?</td><td><a class="table-link" href="https://www.youtube.com/watch?v=LTcMNSvmfug" target="_blank">Ver enlace</a></td><td><span class="badge yes">Visto</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
+                    <tr><td>A1–A2</td><td>How to Think in German</td><td><a class="table-link" href="https://www.youtube.com/watch?v=aXsaH99TkYo" target="_blank">Ver enlace</a></td><td><span class="badge yes">Visto</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Sección Kinos -->
+        <!-- KINOS -->
         <div id="kinos" class="section-container">
             <h1>Kinos</h1>
-            <div class="input-group">
-                <input type="text" id="input-kinos" placeholder="Película o serie por ver...">
-                <button onclick="addItem('kinos')">Agregar</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id=" kino-titulo" placeholder="Película o serie...">
+                <input type="text" id="kino-donde" placeholder="Dónde (ej. Cuevana, Xuper)...">
+                <button class="btn-action" onclick="addKino()">Agregar</button>
             </div>
-            <ul id="list-kinos" class="simple-list"></ul>
+            <table class="data-table">
+                <thead><tr><th>Películas por ver</th><th>Dónde</th><th style="width: 60px;"></th></tr></thead>
+                <tbody id="table-kinos">
+                    <tr><td>Lola Rennt</td><td>Cuevana</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
+                    <tr><td>Alice in the Cities</td><td>Xuper</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Sección Vocabulario -->
+        <!-- VOCABULARIO -->
         <div id="vocabulario" class="section-container">
-            <h1>Vocabulario</h1>
-            <div class="input-group">
-                <input type="text" id="input-vocabulario" placeholder="Nueva palabra y significado...">
-                <button onclick="addItem('vocabulario')">Agregar</button>
+            <h1>Vocabulario (Práctica)</h1>
+            <div class="vocab-card">
+                <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1 • Sustantivo</span>
+                <div class="vocab-word" id="vocab-word">Haus</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p>
+                <div class="vocab-options" id="vocab-options-container">
+                    <!-- Opciones generadas por JS -->
+                </div>
+                <button class="btn-action" style="margin-top: 20px; width: 100%;" onclick="loadNextVocab()">Siguiente palabra</button>
             </div>
-            <ul id="list-vocabulario" class="simple-list"></ul>
         </div>
 
-        <!-- Sección Bucher -->
+        <!-- BUCHER -->
         <div id="bucher" class="section-container">
-            <h1>Bucher</h1>
-            <div class="input-group">
-                <input type="text" id="input-bucher" placeholder="Libro por leer o leer capítulo...">
-                <button onclick="addItem('bucher')">Agregar</button>
+            <h1>Bucher (Lectura)</h1>
+            <div style="display: grid; grid-template-columns: 1fr 120px 120px; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="bucher-titulo" placeholder="Tema / Página (ej. Deutsche Geschichte)">
+                <select id="bucher-estado">
+                    <option value="TRUE">TRUE (Leído)</option>
+                    <option value="FALSE">FALSE</option>
+                </select>
+                <button class="btn-action" onclick="addBucher()">Agregar</button>
             </div>
-            <ul id="list-bucher" class="simple-list"></ul>
+            <table class="data-table">
+                <thead><tr><th>Deutsche Geschichte</th><th>Leído</th><th style="width: 60px;"></th></tr></thead>
+                <tbody id="table-bucher">
+                    <tr><td>5</td><td><span class="badge yes">TRUE</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
+                    <tr><td>20</td><td><span class="badge no">FALSE</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
+                </tbody>
+            </table>
         </div>
     </main>
 
     <script>
-        // Función para cambiar de pestaña
         function switchTab(tabId, element) {
             document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             element.classList.add('active');
         }
 
-        // Función sencilla para agregar elementos a la lista correspondiente
-        function addItem(category) {
+        // Duolingo / Listas Simples
+        function addSimpleItem(category) {
             const input = document.getElementById(`input-${category}`);
-            const text = input.value.trim();
-            if(!text) return;
-
-            const list = document.getElementById(`list-${category}`);
-            
-            const li = document.createElement('li');
-            li.className = 'list-item';
-            li.innerHTML = `
-                <span>${text}</span>
-                <button class="delete-btn" onclick="this.parentElement.remove()">Eliminar</button>
-            `;
-            
-            list.appendChild(li);
+            if(!input.value.trim()) return;
+            const tbody = document.getElementById(`table-${category}`);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${input.value}</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>`;
+            tbody.appendChild(tr);
             input.value = '';
         }
 
-        // Registro del Service Worker para PWA
+        // Podcasts
+        function addPodcast() {
+            const nivel = document.getElementById('pod-nivel').value;
+            const titulo = document.getElementById('pod-titulo').value;
+            const link = document.getElementById('pod-link').value;
+            const estado = document.getElementById('pod-estado').value;
+            if(!titulo) return;
+
+            const tbody = document.getElementById('table-podcast');
+            const tr = document.createElement('tr');
+            const badgeClass = estado === 'Visto' ? 'yes' : 'no';
+            tr.innerHTML = `
+                <td>${nivel}</td>
+                <td>${titulo}</td>
+                <td>${link ? `<a class="table-link" href="${link}" target="_blank">Ver enlace</a>` : '-'}</td>
+                <td><span class="badge ${badgeClass}">${estado}</span></td>
+                <td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>
+            `;
+            tbody.appendChild(tr);
+            document.getElementById('pod-nivel').value = '';
+            document.getElementById('pod-titulo').value = '';
+            document.getElementById('pod-link').value = '';
+        }
+
+        // Kinos
+        function addKino() {
+            const titulo = document.getElementById('kino-titulo').value;
+            const donde = document.getElementById('kino-donde').value;
+            if(!titulo) return;
+
+            const tbody = document.getElementById('table-kinos');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${titulo}</td><td>${donde}</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>`;
+            tbody.appendChild(tr);
+            document.getElementById('kino-titulo').value = '';
+            document.getElementById('kino-donde').value = '';
+        }
+
+        // Bucher
+        function addBucher() {
+            const titulo = document.getElementById('bucher-titulo').value;
+            const estado = document.getElementById('bucher-estado').value;
+            if(!titulo) return;
+
+            const tbody = document.getElementById('table-bucher');
+            const tr = document.createElement('tr');
+            const badgeClass = estado === 'TRUE' ? 'yes' : 'no';
+            tr.innerHTML = `<td>${titulo}</td><td><span class="badge ${badgeClass}">${estado}</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>`;
+            tbody.appendChild(tr);
+            document.getElementById('bucher-titulo').value = '';
+        }
+
+        // Banco de Vocabulario de prueba para la Mini-App
+        const vocabData = [
+            { nivel: 'A1', cat: 'Sustantivo', palabra: 'Haus', correcta: 'Casa', opciones: ['Casa', 'Perro', 'Comida', 'Puerta'] },
+            { nivel: 'B2', cat: 'Sustantivo', palabra: 'Vorbereitung', correcta: 'Preparación', opciones: ['Resultado', 'Preparación', 'Explicación', 'Especial'] },
+            { nivel: 'A2', cat: 'Verbo', palabra: 'Rennen', correcta: 'Correr', opciones: ['Sumar', 'Decir', 'Correr', 'Pensar'] }
+        ];
+        let currentVocabIndex = 0;
+
+        function loadNextVocab() {
+            const item = vocabData[currentVocabIndex];
+            document.getElementById('vocab-nivel-cat').innerText = `${item.nivel} • ${item.cat}`;
+            document.getElementById('vocab-word').innerText = item.palabra;
+            
+            const container = document.getElementById('vocab-options-container');
+            container.innerHTML = '';
+            
+            // Mezclar opciones de forma sencilla
+            const shuffled = [...item.opciones].sort(() => Math.random() - 0.5);
+            shuffled.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if(opt === item.correcta) {
+                        btn.style.background = '#e6f4ea';
+                        btn.style.borderColor = '#137333';
+                        btn.style.color = '#137333';
+                        setTimeout(loadNextVocab, 800);
+                    } else {
+                        btn.style.background = '#fce8e6';
+                        btn.style.borderColor = '#c5221f';
+                        btn.style.color = '#c5221f';
+                    }
+                };
+                container.appendChild(btn);
+            });
+
+            currentVocabIndex = (currentVocabIndex + 1) % vocabData.length;
+        }
+
+        // Iniciar vocabulario al cargar
+        loadNextVocab();
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registrado con éxito', reg))
-                    .catch(err => console.log('Error al registrar Service Worker', err));
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
             });
         }
     </script>
