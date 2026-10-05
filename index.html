@@ -563,6 +563,77 @@
                 alert("Tu navegador no soporta la reproducción de voz.");
             }
         }
+
+        // Base de datos de respaldo offline (por si no hay internet o Google Sheets falla)
+        const OFFLINE_VOCAB_BACKEND = [
+            { nivel: "A2", cat: "Verbos", palabra: "entwickeln", correcta: "desarrollar", opciones: ["desarrollar", "descubrir", "destruir", "decidir"] },
+            { nivel: "B1", cat: "Adjetivos", palabra: "anstrengend", correcta: "agotador", opciones: ["agotador", "divertido", "aburrido", "sencillo"] },
+            { nivel: "B2", cat: "Verbos", palabra: "berücksichtigen", correcta: "tener en cuenta", opciones: ["tener en cuenta", "olvidar", "ignorar", "repetir"] },
+            { nivel: "C1", cat: "Verbos", palabra: "beanspruchen", correcta: "reclamar / exigir", opciones: ["reclamar / exigir", "regalar", "ignorar", "soltar"] },
+            { nivel: "C2", cat: "Verbos", palabra: "erörtern", correcta: "debatir / examinar a fondo", opciones: ["debatir / examinar a fondo", "callar", "aceptar", "huir"] }
+        ];
+        
+        async function fetchAllSheetsData() {
+            // Intentamos cargar desde Google Sheets si hay token y red
+            if (accessToken) {
+                try {
+                    await cargarDatosDesdeGoogle();
+                    return; // Si triunfa, termina aquí
+                } catch (error) {
+                    console.warn("Fallo la conexión con Google Sheets. Cambiando a modo offline...", error);
+                }
+            }
+            
+            // Si no hay token o falló la red, cargamos el respaldo local
+            cargarDatosOffline();
+        }
+        
+        async function cargarDatosDesdeGoogle() {
+            // Vocabulario (A:G) desde Google Sheets
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Vocabulario!A:G`;
+            const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+            if (!response.ok) throw new Error("Error al conectar con la API");
+            
+            const data = await response.json();
+            document.getElementById('loading-vocab').style.display = 'none';
+            document.getElementById('vocab-card-ui').style.display = 'block';
+            
+            globalVocabData = [];
+            if (data.values && data.values.length > 1) {
+                for (let i = 1; i < data.values.length; i++) {
+                    const r = data.values[i];
+                    if (r[2] && r[3]) {
+                        globalVocabData.push({
+                            nivel: (r[0] || 'A2').trim().toUpperCase(),
+                            cat: r[1] || 'General',
+                            palabra: r[2],
+                            correcta: r[3],
+                            opciones: [r[3], r[4], r[5], r[6]].filter(Boolean)
+                        });
+                    }
+                }
+                // Guardamos una copia en el navegador para uso futuro offline
+                localStorage.setItem('deu_vocab_cache', JSON.stringify(globalVocabData));
+                cambiarFiltroNivel();
+            }
+        }
+        
+        function cargarDatosOffline() {
+            document.getElementById('loading-vocab').style.display = 'none';
+            document.getElementById('vocab-card-ui').style.display = 'block';
+        
+            // Verificamos si tenemos una caché guardada previamente, si no usamos el respaldo básico
+            const cachedData = localStorage.getItem('deu_vocab_cache');
+            if (cachedData) {
+                globalVocabData = JSON.parse(cachedData);
+            } else {
+                globalVocabData = OFFLINE_VOCAB_BACKEND;
+            }
+            
+            // Notificamos sutilmente al usuario que está offline
+            document.getElementById('vocab-word').title = "Modo Offline Activo";
+            cambiarFiltroNivel();
+        }
     </script>
 </body>
 </html>
