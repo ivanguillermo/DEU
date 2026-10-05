@@ -88,6 +88,22 @@
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
+        /* Estilos globales y acentos de la bandera alemana para la PWA */
+        .alemania-theme-border {
+            border-image: linear-gradient(to right, #000000, #DD0000, #FFCC00) 1;
+        }
+        
+        .gold-text-glow {
+            color: #FFCC00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+        }
+        
+        .badge-tricolor {
+            background: linear-gradient(135deg, #000000 33%, #DD0000 33%, #DD0000 66%, #FFCC00 66%);
+            height: 4px;
+            width: 100%;
+        }
+
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; overflow: auto; }
             aside { width: 100%; padding: 16px; }
@@ -116,6 +132,36 @@
     </aside>
 
     <main>
+        <div id="duolingo-section" class="p-4 bg-gray-900 text-white rounded-xl shadow-lg border-2 border-yellow-500 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-black border border-yellow-400"></span>
+                    <span class="w-4 h-4 rounded-full bg-red-600"></span>
+                    <span class="w-4 h-4 rounded-full bg-yellow-400"></span>
+                    Duolingo Tracker - Octubre
+                </h2>
+                <div class="text-sm bg-yellow-500 text-black px-3 py-1 rounded-full font-bold">
+                    Meta Diaria: 10 Lecciones
+                </div>
+            </div>
+        
+            <!-- Resumen del Mes -->
+            <div class="grid grid-cols-2 gap-4 mb-4 text-center">
+                <div class="bg-gray-800 p-3 rounded-lg border border-yellow-500/40">
+                    <span class="block text-gray-400 text-xs uppercase">Total CONTEO_OCT</span>
+                    <span id="total-mes-duo" class="text-2xl font-black text-yellow-400">0</span>
+                </div>
+                <div class="bg-gray-800 p-3 rounded-lg border border-yellow-500/40">
+                    <span class="block text-gray-400 text-xs uppercase">Promedio / Estado</span>
+                    <span id="promedio-mes-duo" class="text-2xl font-black text-yellow-400">0.0</span>
+                </div>
+            </div>
+        
+            <!-- Lista de Días con Checkboxes (Simulando la Hoja de Cálculo) -->
+            <div id="duo-days-list" class="space-y-2 max-h-60 overflow-y-auto pr-2">
+                <!-- Generado dinámicamente o estático por días -->
+            </div>
+        </div>
         <!-- PODCAST -->
         <div id="podcast" class="section-container active">
             <h1>Podcast</h1>
@@ -634,6 +680,140 @@
             document.getElementById('vocab-word').title = "Modo Offline Activo";
             cambiarFiltroNivel();
         }
+
+        async function cargarLecturasDesdeGoogle() {
+            if (accessToken) {
+                try {
+                    // Suponiendo que la pestaña en tu Sheet se llama 'Lecturas' (Columnas A a E)
+                    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Lecturas!A:E`;
+                    const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+                    
+                    if (!response.ok) throw new Error("Error al conectar con la hoja de Lecturas");
+                    
+                    const data = await response.json();
+                    globalLecturasData = [];
+                    
+                    if (data.values && data.values.length > 1) {
+                        for (let i = 1; i < data.values.length; i++) {
+                            const r = data.values[i];
+                            if (r[2] && r[3]) { // Si tiene Título y Texto
+                                globalLecturasData.push({
+                                    nivel: (r[0] || 'B1').trim().toUpperCase(),
+                                    tipo: r[1] || 'Artikel',
+                                    titulo: r[2],
+                                    texto: r[3],
+                                    vocabulario: r[4] || ''
+                                });
+                            }
+                        }
+                        // Guardamos en caché local para modo offline
+                        localStorage.setItem('deu_lecturas_cache', JSON.stringify(globalLecturasData));
+                        renderizarLecturas();
+                        return;
+                    }
+                } catch (error) {
+                    console.warn("No se pudieron cargar las lecturas online, cargando caché local...", error);
+                }
+            }
+            
+            // Si no hay red o falló, cargamos del almacenamiento local
+            cargarLecturasOffline();
+        }
+        
+        function cargarLecturasOffline() {
+            const cachedLecturas = localStorage.getItem('deu_lecturas_cache');
+            if (cachedLecturas) {
+                globalLecturasData = JSON.parse(cachedLecturas);
+                renderizarLecturas();
+            } else {
+                // Fallback por si la caché está vacía la primera vez que entras sin internet
+                globalLecturasData = [
+                    { nivel: "B2", tipo: "Offline", titulo: "Keine Verbindung", texto: "Bitte verbinden Sie sich einmal mit dem Internet, um Ihre 30 Geschichten zu synchronisieren.", vocabulario: "die Verbindung" }
+                ];
+                renderizarLecturas();
+            }
+        }
+        let octubreDuolingoData = [
+            { fecha: "5 oct", lecciones: 0 },
+            { fecha: "6 oct", lecciones: 0 },
+            { fecha: "7 oct", lecciones: 0 },
+            { fecha: "8 oct", lecciones: 0 },
+            { fecha: "9 oct", lecciones: 0 },
+            { fecha: "10 oct", lecciones: 0 },
+            { fecha: "11 oct", lecciones: 0 },
+            { fecha: "12 oct", lecciones: 0 },
+            { fecha: "13 oct", lecciones: 0 },
+            { fecha: "14 oct", lecciones: 0 },
+            { fecha: "15 oct", lecciones: 0 },
+            { fecha: "16 oct", lecciones: 0 },
+            { fecha: "17 oct", lecciones: 0 },
+            { fecha: "18 oct", lecciones: 0 },
+            { fecha: "19 oct", lecciones: 0 },
+            { fecha: "20 oct", lecciones: 0 },
+            { fecha: "21 oct", lecciones: 0 },
+            { fecha: "22 oct", lecciones: 0 },
+            { fecha: "23 oct", lecciones: 0 },
+            { fecha: "24 oct", lecciones: 0 },
+            { fecha: "25 oct", lecciones: 0 },
+            { fecha: "26 oct", lecciones: 0 },
+            { fecha: "27 oct", lecciones: 0 },
+            { fecha: "28 oct", lecciones: 0 },
+            { fecha: "29 oct", lecciones: 0 },
+            { fecha: "30 oct", lecciones: 0 },
+            { fecha: "31 oct", lecciones: 0 }
+        ];
+        
+        function renderizarDuolingoTracker() {
+            const contenedor = document.getElementById('duo-days-list');
+            contenedor.innerHTML = '';
+            
+            let totalConteo = 0;
+            
+            octubreDuolingoData.forEach((item, index) => {
+                totalConteo += item.lecciones;
+                
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between bg-gray-800/60 p-2 rounded border border-gray-700 hover:border-yellow-400 transition-colors";
+                
+                row.innerHTML = `
+                    <span class="font-semibold text-gray-300 w-20">${item.fecha}</span>
+                    <div class="flex items-center gap-1">
+                        <!-- Checkboxes rápidos para completar de a 1 lección hasta llegar a 10 -->
+                        <div class="flex gap-1">
+                            ${[...Array(10)].map((_, i) => `
+                                <input type="checkbox" 
+                                    class="w-4 h-4 accent-yellow-500 cursor-pointer rounded" 
+                                    ${i < item.lecciones ? 'checked' : ''} 
+                                    onchange="actualizarLeccionesDuo(${index},${i + 1}, this.checked)">
+                            `).join('')}
+                        </div>
+                    </div>
+                    <span class="bg-black/50 text-yellow-400 font-bold px-2 py-0.5 rounded text-sm w-10 text-center">${item.lecciones}</span>
+                `;
+                contenedor.appendChild(row);
+            });
+            
+            document.getElementById('total-mes-duo').innerText = totalConteo;
+            document.getElementById('promedio-mes-duo').innerText = (totalConteo / octubreDuolingoData.filter(d => d.lecciones > 0).length || 0).toFixed(1);
+            
+            // Guardamos en caché local para persistencia offline
+            localStorage.setItem('deu_duolingo_cache', JSON.stringify(octubreDuolingoData));
+        }
+        
+        function actualizarLeccionesDuo(diaIndex, cantidadMarcada, isChecked) {
+            // Si marca el checkbox de la posición X, el total de lecciones de ese día se actualiza
+            octubreDuolingoData[diaIndex].lecciones = isChecked ? cantidadMarcada : cantidadMarcada - 1;
+            renderizarDuolingoTracker();
+        }
+        
+        // Cargar al iniciar
+        window.addEventListener('DOMContentLoaded', () => {
+            const cachedDuo = localStorage.getItem('deu_duolingo_cache');
+            if (cachedDuo) {
+                octubreDuolingoData = JSON.parse(cachedDuo);
+            }
+            renderizarDuolingoTracker();
+        });
     </script>
 </body>
 </html>
