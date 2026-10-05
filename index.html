@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU - PWA Alemán Avanzada</title>
+    <title>DEU - PWA Alemán Pro</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
     
@@ -75,9 +75,11 @@
         .option-btn { padding: 12px; border: 1px solid var(--border); background: var(--bg-color); border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; }
 
         /* Lector de Textos / Historias */
-        .story-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; line-height: 1.6; font-size: 1.05rem; }
-        .story-box h3 { margin-bottom: 15px; color: var(--primary); }
+        .story-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; line-height: 1.6; font-size: 1.05rem; margin-bottom: 20px; }
+        .story-box h3 { margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
         .story-box p { margin-bottom: 15px; }
+        .btn-audio { background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #1e293b; }
+        .btn-audio:hover { background: #cbd5e1; }
 
         /* Modal Reproductor YouTube */
         #modal-player { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
@@ -108,8 +110,8 @@
             <li class="nav-item active" onclick="switchTab('podcast', this)">Podcast</li>
             <li class="nav-item" onclick="switchTab('kinos', this)">Kinos</li>
             <li class="nav-item" onclick="switchTab('bucher', this)">Bucher (Meta 5 Hojas)</li>
-            <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario</li>
-            <li class="nav-item" onclick="switchTab('lecturas', this)">Lecturas & Historias</li>
+            <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario Pro</li>
+            <li class="nav-item" onclick="switchTab('lecturas', this)">Lecturas & Noticias</li>
         </ul>
     </aside>
 
@@ -180,7 +182,20 @@
 
         <!-- VOCABULARIO -->
         <div id="vocabulario" class="section-container">
-            <h1>Vocabulario (Práctica)</h1>
+            <h1>Vocabulario Pro & Filtro de Niveles</h1>
+            
+            <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 14px; border: 1px solid var(--border); border-radius: var(--radius);">
+                <label for="filtro-nivel" style="font-weight: 600; font-size: 0.95rem;">Filtrar por nivel:</label>
+                <select id="filtro-nivel" onchange="cambiarFiltroNivel()" style="flex: 1; max-width: 250px;">
+                    <option value="TODOS">Todos los niveles (A2 - C2)</option>
+                    <option value="A2">Nivel A2</option>
+                    <option value="B1">Nivel B1</option>
+                    <option value="B2">Nivel B2</option>
+                    <option value="C1">Nivel C1</option>
+                    <option value="C2">Nivel C2</option>
+                </select>
+            </div>
+
             <div id="loading-vocab" class="loading-text">Cargando vocabulario...</div>
             <div class="vocab-card" id="vocab-card-ui" style="display:none;">
                 <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1</span>
@@ -193,9 +208,13 @@
 
         <!-- LECTURAS E HISTORIAS -->
         <div id="lecturas" class="section-container">
-            <h1>Lecturas en Alemán</h1>
+            <h1>Lecturas & Noticias en Alemán</h1>
+            
             <div class="story-box">
-                <h3>Der verirrte Tourist in Berlin (Historia Humorística Corta)</h3>
+                <h3>
+                    <span>Der verirrte Tourist in Berlin (Humor)</span>
+                    <button class="btn-audio" onclick="leerTexto('Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: Ich möchte bitte ein großes Bier! Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!')">🔊 Escuchar</button>
+                </h3>
                 <p>Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: <em>„Ich möchte bitte ein großes Bier!“</em></p>
                 <p>Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: <em>„Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!“</em></p>
                 <p style="color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 10px;">
@@ -203,6 +222,20 @@
                     • <em>sich verirren</em> = perderse<br>
                     • <em>die Bestellung</em> = el pedido<br>
                     • <em>definitiv</em> = definitivamente
+                </p>
+            </div>
+
+            <div class="story-box">
+                <h3>
+                    <span>Kurznachricht: Künstliche Intelligenz im Alltag (Noticia C1)</span>
+                    <button class="btn-audio" onclick="leerTexto('Immer mehr Menschen nutzen generative Künstliche Intelligenz, um ihre tägliche Arbeit zu optimieren. Experten betonen jedoch, dass kritisches Denken und menschliche Kreativität durch Technologie keineswegs ersetzt werden können.')">🔊 Escuchar</button>
+                </h3>
+                <p>Immer mehr Menschen nutzen generative Künstliche Intelligenz, um ihre tägliche Arbeit zu optimieren. Experten betonen jedoch, dass kritisches Denken und menschliche Kreativität durch Technologie keineswegs ersetzt werden können.</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 10px;">
+                    💡 <strong>Vocabulario clave:</strong><br>
+                    • <em>betonen</em> = recalcar / destacar<br>
+                    • <em>keineswegs</em> = de ninguna manera<br>
+                    • <em>ersetzen</em> = reemplazar
                 </p>
             </div>
         </div>
@@ -227,6 +260,7 @@
         let tokenClient;
         let accessToken = localStorage.getItem('deu_access_token');
         let globalVocabData = [];
+        let filteredVocabData = [];
         let currentVocabIndex = 0;
 
         function switchTab(tabId, element) {
@@ -292,7 +326,7 @@
                 return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${btnHtml}</td><td><span class="badge ${badgeClass}">${row[3] || 'NO'}</span></td><td>${toggleBtn}</td>`;
             });
 
-            // Kinos (A:B) -> Separar pendientes y vistas si agregaste columna de estado o simulando
+            // Kinos (A:C)
             loadSheetRangeCustom('Kinos!A:C', (rows) => {
                 document.getElementById('loading-kinos').style.display = 'none';
                 document.getElementById('table-kinos-container').style.display = 'table';
@@ -317,7 +351,7 @@
                 if(countVistas === 0) tbodyVistas.innerHTML = `<tr><td colspan="2" style="color:var(--text-muted); text-align:center;">Ninguna película vista aún</td></tr>`;
             });
 
-            // Bucher (A:C) -> Tema, Hojas, Estado
+            // Bucher (A:C)
             loadSheetRangeCustom('Bucher!A:C', (rows) => {
                 document.getElementById('loading-bucher').style.display = 'none';
                 document.getElementById('table-bucher-container').style.display = 'table';
@@ -332,7 +366,6 @@
                         tbody.innerHTML += `<tr><td>${r[0]}</td><td><b>${hojas} hojas</b></td><td><span class="badge yes">${r[2] || 'Leído'}</span></td></tr>`;
                     }
                 }
-                // Actualizar barra de progreso (Meta: 5 hojas)
                 const porcentaje = Math.min((totalHoy / 5) * 100, 100);
                 document.getElementById('bucher-progress-title').innerText = `Progreso acumulado / hoy: ${totalHoy} / 5 hojas`;
                 document.getElementById('bucher-bar').style.width = `${porcentaje}%`;
@@ -348,7 +381,7 @@
                         const r = rows[i];
                         if(r[2] && r[3]) {
                             globalVocabData.push({
-                                nivel: r[0] || 'A1',
+                                nivel: (r[0] || 'A2').trim().toUpperCase(),
                                 cat: r[1] || 'General',
                                 palabra: r[2],
                                 correcta: r[3],
@@ -356,7 +389,7 @@
                             });
                         }
                     }
-                    loadNextVocab();
+                    cambiarFiltroNivel();
                 }
             });
         }
@@ -402,7 +435,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // Actualizar celda específica (ej. cambiar Podcast a Visto o Kino a Vista)
         async function updateCell(rangeCell, newValue) {
             if (!accessToken) return;
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${rangeCell}?valueInputOption=USER_ENTERED`;
@@ -476,10 +508,27 @@
             document.getElementById('youtube-player-slot').innerHTML = '';
         }
 
+        // Filtro de Vocabulario por Nivel
+        function cambiarFiltroNivel() {
+            const nivelSeleccionado = document.getElementById('filtro-nivel').value;
+            if (nivelSeleccionado === 'TODOS') {
+                filteredVocabData = [...globalVocabData];
+            } else {
+                filteredVocabData = globalVocabData.filter(item => item.nivel === nivelSeleccionado);
+            }
+            currentVocabIndex = 0;
+            loadNextVocab();
+        }
+
         function loadNextVocab() {
-            if(!globalVocabData.length) return;
-            const item = globalVocabData[currentVocabIndex];
-            document.getElementById('vocab-nivel-cat').innerText = item.nivel;
+            if(!filteredVocabData.length) {
+                document.getElementById('vocab-word').innerText = "Sin palabras en este nivel";
+                document.getElementById('vocab-nivel-cat').innerText = "---";
+                document.getElementById('vocab-options-container').innerHTML = '';
+                return;
+            }
+            const item = filteredVocabData[currentVocabIndex];
+            document.getElementById('vocab-nivel-cat').innerText = `${item.nivel} • ${item.cat}`;
             document.getElementById('vocab-word').innerText = item.palabra;
             const container = document.getElementById('vocab-options-container');
             container.innerHTML = '';
@@ -499,7 +548,20 @@
                 };
                 container.appendChild(btn);
             });
-            currentVocabIndex = (currentVocabIndex + 1) % globalVocabData.length;
+            currentVocabIndex = (currentVocabIndex + 1) % filteredVocabData.length;
+        }
+
+        // Lector de voz nativo (Text-to-Speech)
+        function leerTexto(texto) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Detiene cualquier audio anterior
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'de-DE'; // Configura el acento en alemán
+                utterance.rate = 0.9; // Velocidad ligeramente pausada ideal para estudio
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Tu navegador no soporta la reproducción de voz.");
+            }
         }
     </script>
 </body>
