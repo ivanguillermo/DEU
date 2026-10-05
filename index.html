@@ -533,4 +533,122 @@
         async function loadSheetRangeCustom(range, callback) {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
             try {
+                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+                const data = await response.json();
+                callback(data.values);
+            } catch (err) { console.error(err); }
+        }
+
+        // Escritura en Google Sheets (Append)
+        async function appendToSheet(rangeTab, valuesArray, callback) {
+            if (!accessToken) {
+                alert("Por favor conéctate a Google primero para guardar datos.");
+                return;
+            }
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${rangeTab}:append?valueInputOption=USER_ENTERED`;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ values: [valuesArray] })
+                });
+                if(response.ok) {
+                    if(callback) callback();
+                    fetchAllSheetsData();
+                }
+            } catch (err) { console.error("Error al escribir:", err); }
+        }
+
+        function addPodcast() {
+            const n = document.getElementById('pod-nivel').value;
+            const t = document.getElementById('pod-titulo').value;
+            const l = document.getElementById('pod-link').value;
+            const e = document.getElementById('pod-estado').value;
+            if(!t) return;
+            appendToSheet('Podcast!A:D', [n, t, l, e], () => {
+                document.getElementById('pod-nivel').value = '';
+                document.getElementById('pod-titulo').value = '';
+                document.getElementById('pod-link').value = '';
+            });
+        }
+
+        function addKino() {
+            const t = document.getElementById('kino-titulo').value;
+            const d = document.getElementById('kino-donde').value;
+            if(!t) return;
+            appendToSheet('Kinos!A:B', [t, d], () => {
+                document.getElementById('kino-titulo').value = '';
+                document.getElementById('kino-donde').value = '';
+            });
+        }
+
+        function addBucher() {
+            const t = document.getElementById('bucher-titulo').value;
+            const e = document.getElementById('bucher-estado').value;
+            if(!t) return;
+            appendToSheet('Bucher!A:B', [t, e], () => {
+                document.getElementById('bucher-titulo').value = '';
+            });
+        }
+
+        // Extractor de ID de YouTube
+        function extractYouTubeID(url) {
+            if(!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Control Modal Podcast YouTube
+        function openPlayerModal(videoId, title) {
+            document.getElementById('modal-title').innerText = decodeURIComponent(title);
+            document.getElementById('youtube-player-slot').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            document.getElementById('modal-player').style.display = 'flex';
+        }
+
+        function closePlayerModal() {
+            document.getElementById('modal-player').style.display = 'none';
+            document.getElementById('youtube-player-slot').innerHTML = ''; // Detiene el audio al cerrar
+        }
+
+        // Vocabulario Test Lógica
+        function loadNextVocab() {
+            if(!globalVocabData.length) return;
+            const item = globalVocabData[currentVocabIndex];
+            document.getElementById('vocab-nivel-cat').innerText = `${item.nivel} • ${item.cat}`;
+            document.getElementById('vocab-word').innerText = item.palabra;
+            
+            const container = document.getElementById('vocab-options-container');
+            container.innerHTML = '';
+            
+            const shuffled = [...item.opciones].sort(() => Math.random() - 0.5);
+            shuffled.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if(opt === item.correcta) {
+                        btn.style.background = '#e6f4ea';
+                        btn.style.borderColor = '#137333';
+                        btn.style.color = '#137333';
+                        setTimeout(loadNextVocab, 700);
+                    } else {
+                        btn.style.background = '#fce8e6';
+                        btn.style.borderColor = '#c5221f';
+                        btn.style.color = '#c5221f';
+                    }
+                };
+                container.appendChild(btn);
+            });
+
+            currentVocabIndex = (currentVocabIndex + 1) % globalVocabData.length;
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+            });
+        }
+    </script>
+</body>
 </html>
