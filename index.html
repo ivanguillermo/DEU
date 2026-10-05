@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU - Google Sheets Sync</title>
+    <title>DEU - PWA Sincronizada con Google Sheets</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
     
@@ -63,7 +63,7 @@
             font-weight: 900;
             color: var(--text-main);
             letter-spacing: -0.5px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             padding-left: 12px;
             display: flex;
             align-items: center;
@@ -131,6 +131,45 @@
             letter-spacing: -0.5px;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) 110px;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        input, select {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.95rem;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        button.btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button.btn-action:hover {
+            background-color: var(--primary-hover);
+        }
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -138,7 +177,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
-            margin-top: 16px;
+            margin-top: 10px;
         }
 
         .data-table th, .data-table td {
@@ -158,14 +197,15 @@
             border-bottom: none;
         }
 
-        a.table-link {
+        .table-link {
             color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        a.table-link:hover {
+            cursor: pointer;
             text-decoration: underline;
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            padding: 0;
         }
 
         .badge {
@@ -197,6 +237,91 @@
             padding: 20px;
             text-align: center;
         }
+
+        /* Estilo Vocabulario App */
+        .vocab-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .vocab-word {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 16px 0;
+            color: var(--primary);
+        }
+        .vocab-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .option-btn {
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #fff5f5;
+        }
+
+        /* Modal Reproductor YouTube */
+        #modal-player {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            background: none; border: none;
+            font-size: 1.5rem; cursor: pointer;
+            color: var(--text-main);
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            aside { width: 100%; padding: 16px; }
+            aside::before { display: none; }
+            .nav-menu { flex-direction: row; overflow-x: auto; }
+            main { padding: 20px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -219,11 +344,19 @@
         <!-- PODCAST -->
         <div id="podcast" class="section-container active">
             <h1>Podcast</h1>
-            <div id="loading-podcast" class="loading-text">Conéctate a Google para cargar tus podcasts...</div>
+            <div class="form-grid">
+                <input type="text" id="pod-nivel" placeholder="Nivel (ej. B1)">
+                <input type="text" id="pod-titulo" placeholder="Título del Podcast">
+                <input type="text" id="pod-link" placeholder="Link YouTube">
+                <select id="pod-estado">
+                    <option value="NO">NO</option>
+                    <option value="Visto">Visto</option>
+                </select>
+                <button class="btn-action" onclick="addPodcast()">Añadir</button>
+            </div>
+            <div id="loading-podcast" class="loading-text">Conéctate a Google para sincronizar tus podcasts...</div>
             <table class="data-table" id="table-podcast-container" style="display:none;">
-                <thead>
-                    <tr><th>Nivel</th><th>Podcast</th><th>Enlace</th><th>Estado</th></tr>
-                </thead>
+                <thead><tr><th>Nivel</th><th>Podcast</th><th>Reproductor</th><th>Estado</th></tr></thead>
                 <tbody id="table-podcast"></tbody>
             </table>
         </div>
@@ -231,7 +364,12 @@
         <!-- KINOS -->
         <div id="kinos" class="section-container">
             <h1>Kinos</h1>
-            <div id="loading-kinos" class="loading-text">Conéctate a Google para cargar tus películas...</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="kino-titulo" placeholder="Película o serie...">
+                <input type="text" id="kino-donde" placeholder="Dónde (ej. Cuevana)...">
+                <button class="btn-action" onclick="addKino()">Agregar</button>
+            </div>
+            <div id="loading-kinos" class="loading-text">Conéctate a Google para sincronizar tus películas...</div>
             <table class="data-table" id="table-kinos-container" style="display:none;">
                 <thead><tr><th>Películas por ver</th><th>Dónde</th></tr></thead>
                 <tbody id="table-kinos"></tbody>
@@ -241,7 +379,15 @@
         <!-- BUCHER -->
         <div id="bucher" class="section-container">
             <h1>Bucher (Lectura)</h1>
-            <div id="loading-bucher" class="loading-text">Conéctate a Google para cargar tus libros...</div>
+            <div style="display: grid; grid-template-columns: 1fr 120px 120px; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="bucher-titulo" placeholder="Tema / Página">
+                <select id="bucher-estado">
+                    <option value="TRUE">TRUE (Leído)</option>
+                    <option value="FALSE">FALSE</option>
+                </select>
+                <button class="btn-action" onclick="addBucher()">Agregar</button>
+            </div>
+            <div id="loading-bucher" class="loading-text">Conéctate a Google para sincronizar tus libros...</div>
             <table class="data-table" id="table-bucher-container" style="display:none;">
                 <thead><tr><th>Tema / Página</th><th>Leído</th></tr></thead>
                 <tbody id="table-bucher"></tbody>
@@ -250,25 +396,40 @@
 
         <!-- VOCABULARIO -->
         <div id="vocabulario" class="section-container">
-            <h1>Vocabulario</h1>
-            <div id="loading-vocab" class="loading-text">Conéctate a Google para cargar tu vocabulario...</div>
-            <div id="vocab-content" style="display:none;">
-                <p style="margin-bottom: 12px; color: var(--text-muted);">Palabras sincronizadas desde tu hoja.</p>
-                <table class="data-table">
-                    <thead><tr><th>Nivel</th><th>Categoría</th><th>Palabra</th><th>Correcta</th></tr></thead>
-                    <tbody id="table-vocab"></tbody>
-                </table>
+            <h1>Vocabulario (Práctica)</h1>
+            <div id="loading-vocab" class="loading-text">Conéctate a Google para sincronizar tu vocabulario...</div>
+            <div class="vocab-card" id="vocab-card-ui" style="display:none;">
+                <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1 • Sustantivo</span>
+                <div class="vocab-word" id="vocab-word">-</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p>
+                <div class="vocab-options" id="vocab-options-container"></div>
+                <button class="btn-action" style="margin-top: 20px; width: 100%;" onclick="loadNextVocab()">Siguiente palabra</button>
             </div>
         </div>
     </main>
 
+    <!-- Modal Reproductor YouTube flotante -->
+    <div id="modal-player">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closePlayerModal()">&times;</button>
+            <h3 id="modal-title" style="font-size: 1.1rem; padding-right: 30px;">Reproduciendo Podcast</h3>
+            <div class="video-container">
+                <div id="youtube-player-slot"></div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">💡 Consejo: Al reproducir en la PWA instalada, el audio del dispositivo puede mantenerse activo al cambiar de app según la configuración de tu navegador móvil.</p>
+        </div>
+    </div>
+
     <script>
         const CLIENT_ID = '205229444634-rrrplb3vigmcr9gs2elcnc8hbiv8fd14.apps.googleusercontent.com';
         const SPREADSHEET_ID = '1ZwTNP9h2WY9d4PgsovO2Vet5ZQyBshk2hpoSrA5CqBQ';
+        // Permiso completo de lectura y escritura en Google Sheets
         const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
         let tokenClient;
         let accessToken = null;
+        let globalVocabData = [];
+        let currentVocabIndex = 0;
 
         function switchTab(tabId, element) {
             document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active'));
@@ -300,66 +461,76 @@
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             } else {
                 accessToken = null;
-                google.accounts.oauth2.revoke(accessToken, () => {
-                    document.getElementById('auth-button').innerText = 'Conectar Google';
-                    document.getElementById('user-status').innerText = 'Desconectado';
-                });
+                document.getElementById('auth-button').innerText = 'Conectar Google';
+                document.getElementById('user-status').innerText = 'Desconectado';
             }
         }
 
         async function fetchAllSheetsData() {
             if (!accessToken) return;
 
-            // Leer Podcast (Ajusta los nombres de tus pestañas si difieren)
-            loadSheetRange('Podcast!A:D', 'table-podcast', 'loading-podcast', 'table-podcast-container', (row) => {
+            // Podcast (A:D)
+            loadSheetRange('Podcast!A:D', 'table-podcast', 'loading-podcast', 'table-podcast-container', (row, index) => {
                 const badgeClass = row[3] === 'Visto' ? 'yes' : 'no';
-                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${row[2] ? `<a class="table-link" href="${row[2]}" target="_blank">Ver enlace</a>` : ''}</td><td><span class="badge ${badgeClass}">${row[3] || ''}</span></td>`;
+                const videoId = extractYouTubeID(row[2]);
+                const btnHtml = videoId ? `<button class="table-link" onclick="openPlayerModal('${videoId}', '${encodeURIComponent(row[1] || 'Podcast')} ')">Escuchar / Ver</button>` : `<a class="table-link" href="${row[2]}" target="_blank">Enlace externo</a>`;
+                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${btnHtml}</td><td><span class="badge ${badgeClass}">${row[3] || 'NO'}</span></td>`;
             });
 
-            // Leer Kinos
+            // Kinos (A:B)
             loadSheetRange('Kinos!A:B', 'table-kinos', 'loading-kinos', 'table-kinos-container', (row) => {
                 return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td>`;
             });
 
-            // Leer Bucher
+            // Bucher (A:B)
             loadSheetRange('Bucher!A:B', 'table-bucher', 'loading-bucher', 'table-bucher-container', (row) => {
                 const badgeClass = row[1] === 'TRUE' ? 'yes' : 'no';
                 return `<td>${row[0] || ''}</td><td><span class="badge ${badgeClass}">${row[1] || ''}</span></td>`;
             });
 
-            // Leer Vocabulario
-            loadSheetRange('Vocabulario!A:D', 'table-vocab', 'loading-vocab', 'vocab-content', (row) => {
-                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td><strong>${row[2] || ''}</strong></td><td>${row[3] || ''}</td>`;
+            // Vocabulario (A:G) -> Nivel, Categoria, Palabra, Opcion_correcta, Opcion_2, Opcion_3, Opcion_4
+            loadSheetRangeCustom('Vocabulario!A:G', (rows) => {
+                document.getElementById('loading-vocab').style.display = 'none';
+                document.getElementById('vocab-card-ui').style.display = 'block';
+                globalVocabData = [];
+                if(rows && rows.length > 1) {
+                    for(let i=1; i<rows.length; i++) {
+                        const r = rows[i];
+                        if(r[2] && r[3]) {
+                            globalVocabData.push({
+                                nivel: r[0] || 'A1',
+                                cat: r[1] || 'General',
+                                palabra: r[2],
+                                correcta: r[3],
+                                opciones: [r[3], r[4], r[5], r[6]].filter(Boolean)
+                            });
+                        }
+                    }
+                    loadNextVocab();
+                }
             });
         }
 
         async function loadSheetRange(range, tableId, loadingId, containerId, rowParser) {
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
             try {
-                const response = await fetch(url, {
-                    headers: { 'Authorization': `Bearer ${accessToken}` }
-                });
+                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
                 const data = await response.json();
-                
                 document.getElementById(loadingId).style.display = 'none';
                 document.getElementById(containerId).style.display = 'table';
-                
                 const tbody = document.getElementById(tableId);
                 tbody.innerHTML = '';
-
                 if (data.values && data.values.length > 1) {
-                    // Omitimos la primera fila si es la cabecera (Nivel, PODCAST, etc.)
                     for (let i = 1; i < data.values.length; i++) {
                         const tr = document.createElement('tr');
-                        tr.innerHTML = rowParser(data.values[i]);
+                        tr.innerHTML = rowParser(data.values[i], i);
                         tbody.appendChild(tr);
                     }
                 }
-            } catch (err) {
-                console.error(`Error cargando rango ${range}:`, err);
-                document.getElementById(loadingId).innerText = 'Error al sincronizar datos.';
-            }
+            } catch (err) { console.error(err); }
         }
-    </script>
-</body>
+
+        async function loadSheetRangeCustom(range, callback) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
+            try {
 </html>
