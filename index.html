@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deutsch Express - Tracker</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --border: #334155;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    h1 { font-size: 1.5rem; margin: 0; }
+    .streak-badge {
+      background: var(--card-bg);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-info label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .task-info span {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--success);
+      cursor: pointer;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { background: var(--accent-hover); }
+    .progress-bar {
+      background: var(--border);
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .progress-fill {
+      background: var(--success);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🇩🇪 Deutsch Express</h1>
+      <div class="streak-badge" id="streakCounter">Racha: 0 días</div>
+    </header>
+
+    <div class="card">
+      <div style="font-size: 0.9rem; margin-bottom: 6px; display: flex; justify-content: space-between;">
+        <span>Progreso de hoy</span>
+        <span id="progressText">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Metas Diarias</h3>
+      <div id="taskList"></div>
+    </div>
+
+    <button onclick="requestNotificationPermission()">Activar Alertas Push 🔔</button>
+  </div>
+
+  <script>
+    const tasks = [
+      { id: 'duo', title: 'Duolingo', desc: '10 lecciones diarias', completed: false },
+      { id: 'podcast', title: 'Podcast Alemán', desc: '30 minutos de escucha', completed: false },
+      { id: 'reading', title: 'Lectura', desc: '5 páginas de libro', completed: false },
+      { id: 'chat', title: 'Práctica Conversacional', desc: '30 min conmigo', completed: false },
+      { id: 'vocab', title: 'Vocabulario', desc: 'Registrar 5 frases nuevas', completed: false }
+    ];
+
+    const todayKey = new Date().toISOString().split('T')[0];
+
+    function loadState() {
+      const savedDate = localStorage.getItem('deutsch_date');
+      const savedTasks = JSON.parse(localStorage.getItem('deutsch_tasks'));
+      
+      if (savedDate === todayKey && savedTasks) {
+        return savedTasks;
+      }
+      return tasks;
+    }
+
+    let currentTasks = loadState();
+
+    function saveState() {
+      localStorage.setItem('deutsch_date', todayKey);
+      localStorage.setItem('deutsch_tasks', JSON.stringify(currentTasks));
+      updateUI();
+    }
+
+    function toggleTask(id) {
+      const task = currentTasks.find(t => t.id === id);
+      if (task) {
+        task.completed = !task.completed;
+        saveState();
+      }
+    }
+
+    function updateUI() {
+      const listContainer = document.getElementById('taskList');
+      listContainer.innerHTML = '';
+      
+      let completedCount = 0;
+      currentTasks.forEach(task => {
+        if (task.completed) completedCount++;
+        
+        listContainer.innerHTML += `
+          <div class="task-item">
+            <div class="task-info">
+              <label for="${task.id}">${task.title}</label>
+              <span>${task.desc}</span>
+            </div>
+            <input type="checkbox" id="${task.id}" ${task.completed ? 'checked' : ''} onclick="toggleTask('${task.id}')">
+          </div>
+        `;
+      });
+
+      const percentage = Math.round((completedCount / currentTasks.length) * 100);
+      document.getElementById('progressFill').style.width = percentage + '%';
+      document.getElementById('progressText').innerText = percentage + '%';
+
+      if (percentage === 100) {
+        document.getElementById('streakCounter').innerText = "🔥 ¡Meta cumplida hoy!";
+      }
+    }
+
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Este navegador no soporta notificaciones push.");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          alert("¡Notificaciones activadas! Te recordaremos practicar si queda pendiente.");
+          scheduleDailyCheck();
+        }
+      });
+    }
+
+    function scheduleDailyCheck() {
+      // Simulación de comprobación nocturna (ej. a las 8:00 PM)
+      setInterval(() => {
+        const now = new Date();
+        if (now.getHours() === 20 && now.getMinutes() === 0) {
+          const completedCount = currentTasks.filter(t => t.completed).length;
+          if (completedCount < currentTasks.length) {
+            new Notification("¡Atención, Ivan! 🇩🇪", {
+              body: "Aún tienes metas pendientes en tu curso de alemán de hoy. ¡A por ellas!"
+            });
+          }
+        }
+      }, 60000);
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
