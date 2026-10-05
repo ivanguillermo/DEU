@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEU - Panel Funcional</title>
+    <title>DEU - Google Sheets Sync</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
+    
+    <!-- Librería oficial de Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         :root {
@@ -60,7 +63,7 @@
             font-weight: 900;
             color: var(--text-main);
             letter-spacing: -0.5px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             padding-left: 12px;
             display: flex;
             align-items: center;
@@ -69,6 +72,11 @@
 
         .logo-area span {
             color: var(--primary);
+        }
+
+        .auth-container {
+            margin-bottom: 24px;
+            padding-left: 12px;
         }
 
         .nav-menu {
@@ -123,47 +131,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Formularios y Inputs en Línea */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) 120px;
-            gap: 10px;
-            margin-bottom: 24px;
-            background: var(--card-bg);
-            padding: 16px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-        }
-
-        input, select {
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            outline: none;
-            font-size: 0.95rem;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-        }
-
-        input:focus, select:focus {
-            border-color: var(--primary);
-        }
-
-        button.btn-action {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        button.btn-action:hover {
-            background-color: var(--primary-hover);
-        }
-
-        /* Tablas de Listados */
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -171,6 +138,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
+            margin-top: 16px;
         }
 
         .data-table th, .data-table td {
@@ -209,60 +177,25 @@
         .badge.yes { background-color: #e6f4ea; color: #137333; }
         .badge.no { background-color: #fce8e6; color: #c5221f; }
 
-        .delete-btn {
-            background: none;
+        .btn-login {
+            background-color: var(--text-main);
+            color: white;
             border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .delete-btn:hover { text-decoration: underline; }
-
-        /* Estilo para Vocabulario (Flashcard / Test rápido) */
-        .vocab-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .vocab-word {
-            font-size: 2rem;
-            font-weight: 800;
-            margin: 16px 0;
-            color: var(--primary);
-        }
-        .vocab-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .option-btn {
-            padding: 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-color);
+            padding: 10px 16px;
             border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: background 0.2s;
         }
-        .option-btn:hover {
-            border-color: var(--primary);
-            background: #fff5f5;
-        }
+        .btn-login:hover { background-color: var(--primary); }
 
-        @media (max-width: 768px) {
-            body { flex-direction: column; height: auto; overflow: auto; }
-            aside { width: 100%; padding: 16px; }
-            aside::before { display: none; }
-            .nav-menu { flex-direction: row; overflow-x: auto; }
-            main { padding: 20px; }
-            .form-grid { grid-template-columns: 1fr; }
+        .loading-text {
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
         }
     </style>
 </head>
@@ -270,106 +203,73 @@
 
     <aside>
         <div class="logo-area">🇩🇪 <span>DEU</span></div>
+        <div class="auth-container">
+            <button id="auth-button" class="btn-login" onclick="handleAuthClick()">Conectar Google</button>
+            <span id="user-status" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px;">Desconectado</span>
+        </div>
         <ul class="nav-menu">
-            <li class="nav-item active" onclick="switchTab('duolingo', this)">Duolingo</li>
-            <li class="nav-item" onclick="switchTab('podcast', this)">Podcast</li>
+            <li class="nav-item active" onclick="switchTab('podcast', this)">Podcast</li>
             <li class="nav-item" onclick="switchTab('kinos', this)">Kinos</li>
-            <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario</li>
             <li class="nav-item" onclick="switchTab('bucher', this)">Bucher</li>
+            <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario</li>
         </ul>
     </aside>
 
     <main>
-        <!-- DUOLINGO -->
-        <div id="duolingo" class="section-container active">
-            <h1>Duolingo</h1>
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="input-duolingo" placeholder="Meta o lección de hoy..." style="flex:1;">
-                <button class="btn-action" onclick="addSimpleItem('duolingo')">Agregar</button>
-            </div>
-            <table class="data-table">
-                <thead><tr><th>Meta / Actividad</th><th style="width: 80px;">Acción</th></tr></thead>
-                <tbody id="table-duolingo"></tbody>
-            </table>
-        </div>
-
         <!-- PODCAST -->
-        <div id="podcast" class="section-container">
+        <div id="podcast" class="section-container active">
             <h1>Podcast</h1>
-            <div class="form-grid">
-                <input type="text" id="pod-nivel" placeholder="Nivel (ej. B1)">
-                <input type="text" id="pod-titulo" placeholder="Título del Podcast">
-                <input type="text" id="pod-link" placeholder="Link de YouTube">
-                <select id="pod-estado">
-                    <option value="NO">NO</option>
-                    <option value="Visto">Visto</option>
-                </select>
-                <button class="btn-action" onclick="addPodcast()">Añadir</button>
-            </div>
-            <table class="data-table">
+            <div id="loading-podcast" class="loading-text">Conéctate a Google para cargar tus podcasts...</div>
+            <table class="data-table" id="table-podcast-container" style="display:none;">
                 <thead>
-                    <tr><th>Nivel</th><th>Podcast</th><th>Enlace</th><th>Estado</th><th style="width: 60px;"></th></tr>
+                    <tr><th>Nivel</th><th>Podcast</th><th>Enlace</th><th>Estado</th></tr>
                 </thead>
-                <tbody id="table-podcast">
-                    <tr><td>B1</td><td>Was passiert mit unserem Müll?</td><td><a class="table-link" href="https://www.youtube.com/watch?v=LTcMNSvmfug" target="_blank">Ver enlace</a></td><td><span class="badge yes">Visto</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
-                    <tr><td>A1–A2</td><td>How to Think in German</td><td><a class="table-link" href="https://www.youtube.com/watch?v=aXsaH99TkYo" target="_blank">Ver enlace</a></td><td><span class="badge yes">Visto</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
-                </tbody>
+                <tbody id="table-podcast"></tbody>
             </table>
         </div>
 
         <!-- KINOS -->
         <div id="kinos" class="section-container">
             <h1>Kinos</h1>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id=" kino-titulo" placeholder="Película o serie...">
-                <input type="text" id="kino-donde" placeholder="Dónde (ej. Cuevana, Xuper)...">
-                <button class="btn-action" onclick="addKino()">Agregar</button>
-            </div>
-            <table class="data-table">
-                <thead><tr><th>Películas por ver</th><th>Dónde</th><th style="width: 60px;"></th></tr></thead>
-                <tbody id="table-kinos">
-                    <tr><td>Lola Rennt</td><td>Cuevana</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
-                    <tr><td>Alice in the Cities</td><td>Xuper</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
-                </tbody>
+            <div id="loading-kinos" class="loading-text">Conéctate a Google para cargar tus películas...</div>
+            <table class="data-table" id="table-kinos-container" style="display:none;">
+                <thead><tr><th>Películas por ver</th><th>Dónde</th></tr></thead>
+                <tbody id="table-kinos"></tbody>
             </table>
-        </div>
-
-        <!-- VOCABULARIO -->
-        <div id="vocabulario" class="section-container">
-            <h1>Vocabulario (Práctica)</h1>
-            <div class="vocab-card">
-                <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1 • Sustantivo</span>
-                <div class="vocab-word" id="vocab-word">Haus</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p>
-                <div class="vocab-options" id="vocab-options-container">
-                    <!-- Opciones generadas por JS -->
-                </div>
-                <button class="btn-action" style="margin-top: 20px; width: 100%;" onclick="loadNextVocab()">Siguiente palabra</button>
-            </div>
         </div>
 
         <!-- BUCHER -->
         <div id="bucher" class="section-container">
             <h1>Bucher (Lectura)</h1>
-            <div style="display: grid; grid-template-columns: 1fr 120px 120px; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="bucher-titulo" placeholder="Tema / Página (ej. Deutsche Geschichte)">
-                <select id="bucher-estado">
-                    <option value="TRUE">TRUE (Leído)</option>
-                    <option value="FALSE">FALSE</option>
-                </select>
-                <button class="btn-action" onclick="addBucher()">Agregar</button>
-            </div>
-            <table class="data-table">
-                <thead><tr><th>Deutsche Geschichte</th><th>Leído</th><th style="width: 60px;"></th></tr></thead>
-                <tbody id="table-bucher">
-                    <tr><td>5</td><td><span class="badge yes">TRUE</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
-                    <tr><td>20</td><td><span class="badge no">FALSE</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td></tr>
-                </tbody>
+            <div id="loading-bucher" class="loading-text">Conéctate a Google para cargar tus libros...</div>
+            <table class="data-table" id="table-bucher-container" style="display:none;">
+                <thead><tr><th>Tema / Página</th><th>Leído</th></tr></thead>
+                <tbody id="table-bucher"></tbody>
             </table>
+        </div>
+
+        <!-- VOCABULARIO -->
+        <div id="vocabulario" class="section-container">
+            <h1>Vocabulario</h1>
+            <div id="loading-vocab" class="loading-text">Conéctate a Google para cargar tu vocabulario...</div>
+            <div id="vocab-content" style="display:none;">
+                <p style="margin-bottom: 12px; color: var(--text-muted);">Palabras sincronizadas desde tu hoja.</p>
+                <table class="data-table">
+                    <thead><tr><th>Nivel</th><th>Categoría</th><th>Palabra</th><th>Correcta</th></tr></thead>
+                    <tbody id="table-vocab"></tbody>
+                </table>
+            </div>
         </div>
     </main>
 
     <script>
+        const CLIENT_ID = '205229444634-rrrplb3vigmcr9gs2elcnc8hbiv8fd14.apps.googleusercontent.com';
+        const SPREADSHEET_ID = '1ZwTNP9h2WY9d4PgsovO2Vet5ZQyBshk2hpoSrA5CqBQ';
+        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+
+        let tokenClient;
+        let accessToken = null;
+
         function switchTab(tabId, element) {
             document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -377,116 +277,88 @@
             element.classList.add('active');
         }
 
-        // Duolingo / Listas Simples
-        function addSimpleItem(category) {
-            const input = document.getElementById(`input-${category}`);
-            if(!input.value.trim()) return;
-            const tbody = document.getElementById(`table-${category}`);
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${input.value}</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>`;
-            tbody.appendChild(tr);
-            input.value = '';
-        }
-
-        // Podcasts
-        function addPodcast() {
-            const nivel = document.getElementById('pod-nivel').value;
-            const titulo = document.getElementById('pod-titulo').value;
-            const link = document.getElementById('pod-link').value;
-            const estado = document.getElementById('pod-estado').value;
-            if(!titulo) return;
-
-            const tbody = document.getElementById('table-podcast');
-            const tr = document.createElement('tr');
-            const badgeClass = estado === 'Visto' ? 'yes' : 'no';
-            tr.innerHTML = `
-                <td>${nivel}</td>
-                <td>${titulo}</td>
-                <td>${link ? `<a class="table-link" href="${link}" target="_blank">Ver enlace</a>` : '-'}</td>
-                <td><span class="badge ${badgeClass}">${estado}</span></td>
-                <td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>
-            `;
-            tbody.appendChild(tr);
-            document.getElementById('pod-nivel').value = '';
-            document.getElementById('pod-titulo').value = '';
-            document.getElementById('pod-link').value = '';
-        }
-
-        // Kinos
-        function addKino() {
-            const titulo = document.getElementById('kino-titulo').value;
-            const donde = document.getElementById('kino-donde').value;
-            if(!titulo) return;
-
-            const tbody = document.getElementById('table-kinos');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${titulo}</td><td>${donde}</td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>`;
-            tbody.appendChild(tr);
-            document.getElementById('kino-titulo').value = '';
-            document.getElementById('kino-donde').value = '';
-        }
-
-        // Bucher
-        function addBucher() {
-            const titulo = document.getElementById('bucher-titulo').value;
-            const estado = document.getElementById('bucher-estado').value;
-            if(!titulo) return;
-
-            const tbody = document.getElementById('table-bucher');
-            const tr = document.createElement('tr');
-            const badgeClass = estado === 'TRUE' ? 'yes' : 'no';
-            tr.innerHTML = `<td>${titulo}</td><td><span class="badge ${badgeClass}">${estado}</span></td><td><button class="delete-btn" onclick="this.closest('tr').remove()">Borrar</button></td>`;
-            tbody.appendChild(tr);
-            document.getElementById('bucher-titulo').value = '';
-        }
-
-        // Banco de Vocabulario de prueba para la Mini-App
-        const vocabData = [
-            { nivel: 'A1', cat: 'Sustantivo', palabra: 'Haus', correcta: 'Casa', opciones: ['Casa', 'Perro', 'Comida', 'Puerta'] },
-            { nivel: 'B2', cat: 'Sustantivo', palabra: 'Vorbereitung', correcta: 'Preparación', opciones: ['Resultado', 'Preparación', 'Explicación', 'Especial'] },
-            { nivel: 'A2', cat: 'Verbo', palabra: 'Rennen', correcta: 'Correr', opciones: ['Sumar', 'Decir', 'Correr', 'Pensar'] }
-        ];
-        let currentVocabIndex = 0;
-
-        function loadNextVocab() {
-            const item = vocabData[currentVocabIndex];
-            document.getElementById('vocab-nivel-cat').innerText = `${item.nivel} • ${item.cat}`;
-            document.getElementById('vocab-word').innerText = item.palabra;
-            
-            const container = document.getElementById('vocab-options-container');
-            container.innerHTML = '';
-            
-            // Mezclar opciones de forma sencilla
-            const shuffled = [...item.opciones].sort(() => Math.random() - 0.5);
-            shuffled.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if(opt === item.correcta) {
-                        btn.style.background = '#e6f4ea';
-                        btn.style.borderColor = '#137333';
-                        btn.style.color = '#137333';
-                        setTimeout(loadNextVocab, 800);
-                    } else {
-                        btn.style.background = '#fce8e6';
-                        btn.style.borderColor = '#c5221f';
-                        btn.style.color = '#c5221f';
+        window.onload = function () {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: (resp) => {
+                    if (resp.error !== undefined) {
+                        console.error(resp);
+                        return;
                     }
-                };
-                container.appendChild(btn);
+                    accessToken = resp.access_token;
+                    document.getElementById('auth-button').innerText = 'Desconectado';
+                    document.getElementById('auth-button').style.background = '#333';
+                    document.getElementById('user-status').innerText = 'Sincronizado con Google';
+                    fetchAllSheetsData();
+                }
             });
+        };
 
-            currentVocabIndex = (currentVocabIndex + 1) % vocabData.length;
+        function handleAuthClick() {
+            if (!accessToken) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                accessToken = null;
+                google.accounts.oauth2.revoke(accessToken, () => {
+                    document.getElementById('auth-button').innerText = 'Conectar Google';
+                    document.getElementById('user-status').innerText = 'Desconectado';
+                });
+            }
         }
 
-        // Iniciar vocabulario al cargar
-        loadNextVocab();
+        async function fetchAllSheetsData() {
+            if (!accessToken) return;
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+            // Leer Podcast (Ajusta los nombres de tus pestañas si difieren)
+            loadSheetRange('Podcast!A:D', 'table-podcast', 'loading-podcast', 'table-podcast-container', (row) => {
+                const badgeClass = row[3] === 'Visto' ? 'yes' : 'no';
+                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${row[2] ? `<a class="table-link" href="${row[2]}" target="_blank">Ver enlace</a>` : ''}</td><td><span class="badge ${badgeClass}">${row[3] || ''}</span></td>`;
             });
+
+            // Leer Kinos
+            loadSheetRange('Kinos!A:B', 'table-kinos', 'loading-kinos', 'table-kinos-container', (row) => {
+                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td>`;
+            });
+
+            // Leer Bucher
+            loadSheetRange('Bucher!A:B', 'table-bucher', 'loading-bucher', 'table-bucher-container', (row) => {
+                const badgeClass = row[1] === 'TRUE' ? 'yes' : 'no';
+                return `<td>${row[0] || ''}</td><td><span class="badge ${badgeClass}">${row[1] || ''}</span></td>`;
+            });
+
+            // Leer Vocabulario
+            loadSheetRange('Vocabulario!A:D', 'table-vocab', 'loading-vocab', 'vocab-content', (row) => {
+                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td><strong>${row[2] || ''}</strong></td><td>${row[3] || ''}</td>`;
+            });
+        }
+
+        async function loadSheetRange(range, tableId, loadingId, containerId, rowParser) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                const data = await response.json();
+                
+                document.getElementById(loadingId).style.display = 'none';
+                document.getElementById(containerId).style.display = 'table';
+                
+                const tbody = document.getElementById(tableId);
+                tbody.innerHTML = '';
+
+                if (data.values && data.values.length > 1) {
+                    // Omitimos la primera fila si es la cabecera (Nivel, PODCAST, etc.)
+                    for (let i = 1; i < data.values.length; i++) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = rowParser(data.values[i]);
+                        tbody.appendChild(tr);
+                    }
+                }
+            } catch (err) {
+                console.error(`Error cargando rango ${range}:`, err);
+                document.getElementById(loadingId).innerText = 'Error al sincronizar datos.';
+            }
         }
     </script>
 </body>
