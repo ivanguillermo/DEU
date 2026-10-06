@@ -686,5 +686,33 @@
             }
         }, 300,000);
     </script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+              apiKey: "AIzaSyAz14i2wcoJ7hQpbQ0_unr41_0ms4PIoTI",
+              authDomain: "prodeu-61ee3.firebaseapp.com",
+              projectId: "prodeu-61ee3",
+              storageBucket: "prodeu-61ee3.firebasestorage.app",
+              messagingSenderId: "635497125360",
+              appId: "1:635497125360:web:0fb70f7f72e51097deb935",
+              measurementId: "G-WCZ15JZ8FV"
+            };
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+    
+        function solicitarTokenFirebase() {
+            messaging.getToken({ vapidKey: 'TU_CLAVE_VAPID_PUBLICA' }).then((currentToken) => {
+                if (currentToken) {
+                    console.log("FCM Token obtenido:", currentToken);
+                    // Opcional: Envías este token a tu Google Sheet para que Apps Script te tenga registrado
+                } else {
+                    console.log('No se pudo obtener el token de registro.');
+                }
+            }).catch((err) => {
+                console.log('Error al obtener el token: ', err);
+            });
+        }
+    </script>
 </body>
 </html>
