@@ -147,4 +147,38 @@
             <div class="vocab-card" id="vocab-card-ui" style="display:none;">
                 <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1</span>
                 <div class="vocab-word" id="vocab-word">-</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p
+                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p>
+                <div class="vocab-options" id="vocab-options-container"></div>
+                <button class="btn-action" style="margin-top: 20px; width: 100%; padding: 12px;" onclick="loadNextVocab()">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- LESEN (Lecturas) -->
+        <div id="lecturas" class="section-container">
+            <h1>Lesen & Nachrichten</h1>
+            <div class="story-box">
+                <h3>
+                    <span>Der verirrte Tourist in Berlin (Humor)</span>
+                    <button class="btn-audio" onclick="leerTexto('Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen...')"><i class="fa-solid fa-volume-high"></i> Escuchar</button>
+                </h3>
+                <p>Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: <em>„Ich möchte bitte ein großes Bier!“</em></p>
+                <p>Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: <em>„Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!“</em></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Reproductor YouTube -->
+    <div id="modal-player">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closePlayerModal()">&times;</button>
+            <h3 id="modal-title" style="font-size: 1.1rem; padding-right: 30px; margin-bottom: 10px;">Reproduciendo</h3>
+            <div class="video-container">
+                <div id="youtube-player-slot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tu archivo JS separado -->
+    <script src="app.js"></script>
+</body>
+</html>
