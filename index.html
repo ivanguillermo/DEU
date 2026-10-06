@@ -7,120 +7,30 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 600%22><rect width=%22900%22 height=%22600%22 fill=%22%23ffce00%22/><rect width=%22900%22 height=%22400%22 fill=%22%23d00%22/><rect width=%22900%22 height=%22200%22 fill=%22%23000%22/></svg>">
     
+    <!-- FontAwesome para iconos limpios -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
-    <style>
-        :root {
-            --bg-color: #fafafa;
-            --card-bg: #ffffff;
-            --text-main: #111111;
-            --text-muted: #666666;
-            --primary: #dd0000;
-            --primary-hover: #b30000;
-            --gold: #ffcc00;
-            --border: #eaeaea;
-            --radius: 12px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
-
-        aside {
-            width: 260px; background-color: var(--card-bg); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 24px 16px; position: relative;
-        }
-        aside::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-            background: linear-gradient(90deg, #000 33.33%, #dd0000 33.33% 66.66%, #ffcc00 66.66%);
-        }
-        .logo-area { font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; padding-left: 12px; display: flex; align-items: center; gap: 10px; }
-        .logo-area span { color: var(--primary); }
-        .logo-area b { color: var(--gold); text-shadow: 0 0 5px rgba(255,204,0,0.5); }
-        .auth-container { margin-bottom: 24px; padding-left: 12px; }
-
-        .nav-menu { display: flex; flex-direction: column; gap: 6px; list-style: none; overflow-y: auto; max-height: calc(100vh - 180px); }
-        .nav-item { padding: 10px 14px; border-radius: var(--radius); font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
-        .nav-item:hover { background-color: #f5f5f5; color: var(--text-main); }
-        .nav-item.active { background-color: var(--text-main); color: var(--gold); font-weight: 700; border-left: 4px solid var(--gold); }
-
-        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 40px; }
-        .section-container { display: none; max-width: 900px; width: 100%; margin: 0 auto; }
-        .section-container.active { display: block; }
-        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
-        h1 span.gold { color: #d4af37; text-shadow: 0 0 8px rgba(212,175,55,0.3); }
-
-        .form-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) 110px; gap: 10px; margin-bottom: 20px;
-            background: var(--card-bg); padding: 16px; border: 1px solid var(--border); border-radius: var(--radius);
-        }
-        input, select { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 0.95rem; background: var(--bg-color); color: var(--text-main); }
-        input:focus, select:focus { border-color: var(--primary); }
-        button.btn-action { background-color: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        button.btn-action:hover { background-color: var(--primary-hover); }
-
-        .data-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 10px; margin-bottom: 20px; }
-        .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-        .data-table th { background-color: #f8f9fa; font-weight: 600; color: var(--text-muted); }
-        .data-table tr:last-child td { border-bottom: none; }
-
-        .table-link { color: var(--primary); cursor: pointer; text-decoration: underline; font-weight: 500; background: none; border: none; font-size: 0.95rem; padding: 0; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
-        .badge.yes { background-color: #e6f4ea; color: #137333; }
-        .badge.no { background-color: #fce8e6; color: #c5221f; }
-
-        .btn-login { background-color: var(--text-main); color: var(--gold); border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; width: 100%; }
-
-        /* Vocabulario Card */
-        .vocab-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; max-width: 500px; margin: 0 auto; }
-        .vocab-word { font-size: 2rem; font-weight: 800; margin: 16px 0; color: var(--primary); }
-        .vocab-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .option-btn { padding: 12px; border: 1px solid var(--border); background: var(--bg-color); border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; }
-
-        /* Lector de Textos / Historias */
-        .story-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; line-height: 1.6; font-size: 1.05rem; margin-bottom: 20px; }
-        .story-box h3 { margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
-        .story-box p { margin-bottom: 15px; }
-        .btn-audio { background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #1e293b; }
-        .btn-audio:hover { background: #cbd5e1; }
-
-        /* Estilo Duolingo Diario */
-        .duo-card { background: var(--card-bg); border: 2px solid #d4af37; border-radius: var(--radius); padding: 24px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); }
-        .duo-checkboxes { display: grid; grid-template-columns: repeat(auto-fit, minmax(45px, 1fr)); gap: 10px; margin: 20px 0; }
-        .duo-box-item { display: flex; flex-direction: column; align-items: center; background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
-        .duo-box-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: #58cc02; cursor: pointer; }
-
-        /* Modal Reproductor YouTube */
-        #modal-player { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--card-bg); padding: 20px; border-radius: var(--radius); max-width: 600px; width: 90%; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-top: 15px; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; height: auto; overflow: auto; }
-            aside { width: 100%; padding: 16px; }
-            aside::before { display: none; }
-            .nav-menu { flex-direction: row; overflow-x: auto; max-height: none; }
-            main { padding: 20px; }
-            .form-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    <!-- Tu archivo CSS separado -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <aside>
-        <div class="logo-area">🇩🇪 <span>DEU</span> <b style="color:var(--gold);">PRO</b></div>
+        <div class="logo-area">🇩🇪 <span>DEU</span> <b>PRO</b></div>
         <div class="auth-container">
-            <button id="auth-button" class="btn-login" onclick="handleAuthClick()">Conectar Google</button>
-            <span id="user-status" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px; text-align: center;">Desconectado</span>
+            <button id="auth-button" class="btn-login" onclick="handleAuthClick()"><i class="fa-brands fa-google"></i> Conectar Google</button>
+            <span id="user-status">Desconectado</span>
         </div>
         <ul class="nav-menu">
-            <li class="nav-item active" onclick="switchTab('podcast', this)">Podcast</li>
-            <li class="nav-item" onclick="switchTab('kinos', this)">Kinos</li>
-            <li class="nav-item" onclick="switchTab('bucher', this)">Bucher (Meta 5 Hojas)</li>
-            <li class="nav-item" onclick="switchTab('duolingo', this)">🦉 Duolingo Diario</li>
-            <li class="nav-item" onclick="switchTab('vocabulario', this)">Vocabulario Pro</li>
-            <li class="nav-item" onclick="switchTab('lecturas', this)">Lecturas & Noticias</li>
+            <li class="nav-item active" onclick="switchTab('podcast', this)"><i class="fa-solid fa-headphones"></i> Podcast</li>
+            <li class="nav-item" onclick="switchTab('kinos', this)"><i class="fa-solid fa-film"></i> Kinos</li>
+            <li class="nav-item" onclick="switchTab('bucher', this)"><i class="fa-solid fa-book"></i> Bucher</li>
+            <li class="nav-item" onclick="switchTab('duolingo', this)"><i class="fa-solid fa-star"></i> Duo</li>
+            <li class="nav-item" onclick="switchTab('vocabulario', this)"><i class="fa-solid fa-language"></i> Wortschatz</li>
+            <li class="nav-item" onclick="switchTab('lecturas', this)"><i class="fa-solid fa-newspaper"></i> Lesen</li>
         </ul>
     </aside>
 
@@ -131,7 +41,7 @@
             <div class="duo-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
-                        <h3 id="duo-date-title" style="font-size: 1.2rem; color: var(--text-main);">Fecha de hoy: 5 de octubre</h3>
+                        <h3 id="duo-date-title" style="font-size: 1.2rem; color: var(--text-main);">Fecha de hoy</h3>
                         <p style="color: var(--text-muted); font-size: 0.9rem;">Marca tus 10 lecciones meta para hoy:</p>
                     </div>
                     <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 10px 16px; border-radius: 8px; text-align: right;">
@@ -140,18 +50,15 @@
                     </div>
                 </div>
 
-                <!-- Los 10 Checkboxes del Día -->
-                <div class="duo-checkboxes" id="duo-daily-checkboxes">
-                    <!-- Generado por JS -->
-                </div>
+                <div class="duo-checkboxes" id="duo-daily-checkboxes"></div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px;">
                     <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border);">
-                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">TOTAL MES (Celda C2)</span>
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">TOTAL MES (C2)</span>
                         <span id="duo-val-c2" style="font-size: 1.8rem; font-weight: 900; color: var(--primary);">0</span>
                     </div>
                     <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border);">
-                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">PROMEDIO DIARIO (Celda D2)</span>
+                        <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">PROMEDIO (D2)</span>
                         <span id="duo-val-d2" style="font-size: 1.8rem; font-weight: 900; color: #137333;">0.0</span>
                     </div>
                 </div>
@@ -160,7 +67,7 @@
 
         <!-- PODCAST -->
         <div id="podcast" class="section-container active">
-            <h1>Podcast <span class="gold">🎧</span></h1>
+            <h1>Podcast</h1>
             <div class="form-grid">
                 <input type="text" id="pod-nivel" placeholder="Nivel (ej. B1)">
                 <input type="text" id="pod-titulo" placeholder="Título del Podcast">
@@ -180,10 +87,10 @@
 
         <!-- KINOS -->
         <div id="kinos" class="section-container">
-            <h1>Kinos (Películas y Series) <span class="gold">🎬</span></h1>
+            <h1>Kinos (Películas y Series)</h1>
             <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 10px; margin-bottom: 20px;">
                 <input type="text" id="kino-titulo" placeholder="Película o serie...">
-                <input type="text" id="kino-donde" placeholder="Dónde (ej. Cuevana)...">
+                <input type="text" id="kino-donde" placeholder="Dónde...">
                 <button class="btn-action" onclick="addKino()">Agregar</button>
             </div>
             
@@ -203,7 +110,7 @@
 
         <!-- BUCHER -->
         <div id="bucher" class="section-container">
-            <h1>Bucher - Meta Diaria (5 Hojas) <span class="gold">📖</span></h1>
+            <h1>Bucher - Meta Diaria (5 Hojas)</h1>
             <div style="background: var(--card-bg); padding: 20px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px;">
                 <h3 id="bucher-progress-title" style="margin-bottom: 10px;">Progreso de hoy: 0 / 5 hojas leídas</h3>
                 <div style="background: #eee; border-radius: 6px; height: 12px; width: 100%; overflow: hidden;">
@@ -211,508 +118,33 @@
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr 140px; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="bucher-titulo" placeholder="Libro / Tema / Páginas">
-                <input type="number" id="bucher-hojas" placeholder="Hojas leídas hoy" value="5">
+                <input type="text" id="bucher-titulo" placeholder="Libro / Tema">
+                <input type="number" id="bucher-hojas" placeholder="Hojas" value="5">
                 <button class="btn-action" onclick="addBucher()">Registrar</button>
             </div>
-            <div id="loading-bucher" class="loading-text">Sincronizando registros de lectura...</div>
+            <div id="loading-bucher" class="loading-text">Sincronizando registros...</div>
             <table class="data-table" id="table-bucher-container" style="display:none;">
                 <thead><tr><th>Libro / Registro</th><th>Hojas Leídas</th><th>Fecha / Estado</th></tr></thead>
                 <tbody id="table-bucher"></tbody>
             </table>
         </div>
 
-        <!-- VOCABULARIO -->
+        <!-- WORTSCHATZ (Vocabulario) -->
         <div id="vocabulario" class="section-container">
-            <h1>Vocabulario Pro & Filtro de Niveles <span class="gold">🔤</span></h1>
-            
+            <h1>Wortschatz Pro</h1>
             <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 14px; border: 1px solid var(--border); border-radius: var(--radius);">
-                <label for="filtro-nivel" style="font-weight: 600; font-size: 0.95rem;">Filtrar por nivel:</label>
+                <label for="filtro-nivel" style="font-weight: 600; font-size: 0.95rem;">Nivel:</label>
                 <select id="filtro-nivel" onchange="cambiarFiltroNivel()" style="flex: 1; max-width: 250px;">
-                    <option value="TODOS">Todos los niveles (A2 - C2)</option>
-                    <option value="A2">Nivel A2</option>
-                    <option value="B1">Nivel B1</option>
-                    <option value="B2">Nivel B2</option>
-                    <option value="C1">Nivel C1</option>
-                    <option value="C2">Nivel C2</option>
+                    <option value="TODOS">Todos (A2 - C2)</option>
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                    <option value="C1">C1</option>
+                    <option value="C2">C2</option>
                 </select>
             </div>
-
             <div id="loading-vocab" class="loading-text">Cargando vocabulario...</div>
             <div class="vocab-card" id="vocab-card-ui" style="display:none;">
                 <span class="badge" id="vocab-nivel-cat" style="background: #e2e8f0; color: #1e293b;">A1</span>
                 <div class="vocab-word" id="vocab-word">-</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p>
-                <div class="vocab-options" id="vocab-options-container"></div>
-                <button class="btn-action" style="margin-top: 20px; width: 100%; padding: 12px;" onclick="loadNextVocab()">Siguiente palabra</button>
-            </div>
-        </div>
-
-        <!-- LECTURAS E HISTORIAS -->
-        <div id="lecturas" class="section-container">
-            <h1>Lecturas & Noticias en Alemán <span class="gold">📰</span></h1>
-            
-            <div class="story-box">
-                <h3>
-                    <span>Der verirrte Tourist in Berlin (Humor)</span>
-                    <button class="btn-audio" onclick="leerTexto('Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: Ich möchte bitte ein großes Bier! Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!')">🔊 Escuchar</button>
-                </h3>
-                <p>Ein Tourist aus Spanien geht durch Berlin und möchte einen Kaffee bestellen. Er geht in ein kleines Café und sagt stolz zum Kellner: <em>„Ich möchte bitte ein großes Bier!“</em></p>
-                <p>Der Kellner schaut ihn überrascht an, lächelt und antwortet auf Deutsch: <em>„Um zehn Uhr morgens? Mein Freund, du bist definitiv in Berlin richtig!“</em></p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal Reproductor YouTube -->
-    <div id="modal-player">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closePlayerModal()">&times;</button>
-            <h3 id="modal-title" style="font-size: 1.1rem; padding-right: 30px; margin-bottom: 10px;">Reproduciendo Podcast</h3>
-            <div class="video-container">
-                <div id="youtube-player-slot"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const CLIENT_ID = '205229444634-rrrplb3vigmcr9gs2elcnc8hbiv8fd14.apps.googleusercontent.com';
-        const SPREADSHEET_ID = '1ZwTNP9h2WY9d4PgsovO2Vet5ZQyBshk2hpoSrA5CqBQ';
-        const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
-
-        let tokenClient;
-        let accessToken = localStorage.getItem('deu_access_token');
-        let globalVocabData = [];
-        let filteredVocabData = [];
-        let currentVocabIndex = 0;
-
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-        }
-
-        window.onload = function () {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                callback: (resp) => {
-                    if (resp.error !== undefined) { console.error(resp); return; }
-                    accessToken = resp.access_token;
-                    localStorage.setItem('deu_access_token', accessToken);
-                    updateAuthUI(true);
-                    fetchAllSheetsData();
-                }
-            });
-
-            if (accessToken) {
-                updateAuthUI(true);
-                fetchAllSheetsData();
-            }
-            
-            // Inicializar checkboxes de Duolingo de hoy
-            renderizarDuolingoDiario(0);
-        };
-
-        function updateAuthUI(isConnected) {
-            const btn = document.getElementById('auth-button');
-            const status = document.getElementById('user-status');
-            if (isConnected) {
-                btn.innerText = 'Desconectar';
-                btn.style.background = '#333';
-                status.innerText = 'Sincronizado con Google';
-            } else {
-                btn.innerText = 'Conectar Google';
-                btn.style.background = 'var(--text-main)';
-                status.innerText = 'Desconectado';
-            }
-        }
-
-        function handleAuthClick() {
-            if (!accessToken) {
-                tokenClient.requestAccessToken({ prompt: 'consent' });
-            } else {
-                accessToken = null;
-                localStorage.removeItem('deu_access_token');
-                updateAuthUI(false);
-            }
-        }
-
-        async function fetchAllSheetsData() {
-            if (!accessToken) return;
-
-            // Podcast (A:D)
-            loadSheetRange('Podcast!A:D', 'table-podcast', 'loading-podcast', 'table-podcast-container', (row, index) => {
-                const isVisto = row[3] === 'Visto';
-                const badgeClass = isVisto ? 'yes' : 'no';
-                const videoId = extractYouTubeID(row[2]);
-                const btnHtml = videoId ? `<button class="table-link" onclick="openPlayerModal('${videoId}', '${encodeURIComponent(row[1] || 'Podcast')} ')">Escuchar</button>` : `<a class="table-link" href="${row[2]}" target="_blank">Enlace</a>`;
-                const toggleBtn = `<button class="table-link" style="color:var(--text-main);" onclick="togglePodcastStatus(${index + 2}, '${row[3]}')">Cambiar</button>`;
-                return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${btnHtml}</td><td><span class="badge ${badgeClass}">${row[3] || 'NO'}</span></td><td>${toggleBtn}</td>`;
-            });
-
-            // Kinos (A:C)
-            loadSheetRangeCustom('Kinos!A:C', (rows) => {
-                document.getElementById('loading-kinos').style.display = 'none';
-                document.getElementById('table-kinos-container').style.display = 'table';
-                const tbody = document.getElementById('table-kinos');
-                const tbodyVistas = document.getElementById('table-kinos-vistas');
-                tbody.innerHTML = ''; tbodyVistas.innerHTML = '';
-                
-                let countVistas = 0;
-                if(rows && rows.length > 1) {
-                    for(let i=1; i<rows.length; i++) {
-                        const r = rows[i];
-                        const rowNum = i + 1;
-                        const estado = r[2] || 'Pendiente';
-                        if(estado === 'Vista') {
-                            countVistas++;
-                            tbodyVistas.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`;
-                        } else {
-                            tbody.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]}</td><td><button class="table-link" onclick="marcarKinoVista(${rowNum})">✔ Vista</button></td></tr>`;
-                        }
-                    }
-                }
-                if(countVistas === 0) tbodyVistas.innerHTML = `<tr><td colspan="2" style="color:var(--text-muted); text-align:center;">Ninguna película vista aún</td></tr>`;
-            });
-
-            // Bucher (A:C)
-            loadSheetRangeCustom('Bucher!A:C', (rows) => {
-                document.getElementById('loading-bucher').style.display = 'none';
-                document.getElementById('table-bucher-container').style.display = 'table';
-                const tbody = document.getElementById('table-bucher');
-                tbody.innerHTML = '';
-                let totalHoy = 0;
-                if(rows && rows.length > 1) {
-                    for(let i=1; i<rows.length; i++) {
-                        const r = rows[i];
-                        const hojas = parseInt(r[1]) || 0;
-                        totalHoy += hojas;
-                        tbody.innerHTML += `<tr><td>${r[0]}</td><td><b>${hojas} hojas</b></td><td><span class="badge yes">${r[2] || 'Leído'}</span></td></tr>`;
-                    }
-                }
-                const porcentaje = Math.min((totalHoy / 5) * 100, 100);
-                document.getElementById('bucher-progress-title').innerText = `Progreso acumulado / hoy: ${totalHoy} / 5 hojas`;
-                document.getElementById('bucher-bar').style.width = `${porcentaje}%`;
-            });
-
-            // Duolingo Totales (Celda C2 y D2 de tu hoja de Duolingo)
-            loadSheetRangeCustom('Duolingo!C2:D2', (rows) => {
-                if(rows && rows.length > 0) {
-                    document.getElementById('duo-val-c2').innerText = rows[0][0] || '0';
-                    document.getElementById('duo-val-d2').innerText = rows[0][1] || '0.0';
-                    document.getElementById('duo-status-sheet').innerText = 'Sincronizado con Sheet';
-                }
-            });
-
-            // Vocabulario (A:G)
-            loadSheetRangeCustom('Vocabulario!A:G', (rows) => {
-                document.getElementById('loading-vocab').style.display = 'none';
-                document.getElementById('vocab-card-ui').style.display = 'block';
-                globalVocabData = [];
-                if(rows && rows.length > 1) {
-                    for(let i=1; i<rows.length; i++) {
-                        const r = rows[i];
-                        if(r[2] && r[3]) {
-                            globalVocabData.push({
-                                nivel: (r[0] || 'A2').trim().toUpperCase(),
-                                cat: r[1] || 'General',
-                                palabra: r[2],
-                                correcta: r[3],
-                                opciones: [r[3], r[4], r[5], r[6]].filter(Boolean)
-                            });
-                        }
-                    }
-                    cambiarFiltroNivel();
-                }
-            });
-        }
-
-        async function loadSheetRange(range, tableId, loadingId, containerId, rowParser) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
-            try {
-                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
-                const data = await response.json();
-                document.getElementById(loadingId).style.display = 'none';
-                document.getElementById(containerId).style.display = 'table';
-                const tbody = document.getElementById(tableId);
-                tbody.innerHTML = '';
-                if (data.values && data.values.length > 1) {
-                    for (let i = 1; i < data.values.length; i++) {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = rowParser(data.values[i], i);
-                        tbody.appendChild(tr);
-                    }
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        async function loadSheetRangeCustom(range, callback) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}`;
-            try {
-                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
-                const data = await response.json();
-                callback(data.values);
-            } catch (err) { console.error(err); }
-        }
-
-        async function appendToSheet(rangeTab, valuesArray, callback) {
-            if (!accessToken) { alert("Conéctate a Google primero."); return; }
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${rangeTab}:append?valueInputOption=USER_ENTERED`;
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ values: [valuesArray] })
-                });
-                if(response.ok) { if(callback) callback(); fetchAllSheetsData(); }
-            } catch (err) { console.error(err); }
-        }
-
-        async function updateCell(rangeCell, newValue) {
-            if (!accessToken) return;
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${rangeCell}?valueInputOption=USER_ENTERED`;
-            try {
-                await fetch(url, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ values: [[newValue]] })
-                });
-                fetchAllSheetsData();
-            } catch (err) { console.error(err); }
-        }
-
-        function togglePodcastStatus(rowNumber, currentStatus) {
-            const nuevoEstado = currentStatus === 'Visto' ? 'NO' : 'Visto';
-            updateCell(`Podcast!D${rowNumber}`, nuevoEstado);
-        }
-
-        function marcarKinoVista(rowNumber) {
-            updateCell(`Kinos!C${rowNumber}`, 'Vista');
-        }
-
-        function addPodcast() {
-            const n = document.getElementById('pod-nivel').value;
-            const t = document.getElementById('pod-titulo').value;
-            const l = document.getElementById('pod-link').value;
-            const e = document.getElementById('pod-estado').value;
-            if(!t) return;
-            appendToSheet('Podcast!A:D', [n, t, l, e], () => {
-                document.getElementById('pod-nivel').value = '';
-                document.getElementById('pod-titulo').value = '';
-                document.getElementById('pod-link').value = '';
-            });
-        }
-
-        function addKino() {
-            const t = document.getElementById('kino-titulo').value;
-            const d = document.getElementById('kino-donde').value;
-            if(!t) return;
-            appendToSheet('Kinos!A:C', [t, d, 'Pendiente'], () => {
-                document.getElementById('kino-titulo').value = '';
-                document.getElementById('kino-donde').value = '';
-            });
-        }
-
-        function addBucher() {
-            const t = document.getElementById('bucher-titulo').value;
-            const h = document.getElementById('bucher-hojas').value || '5';
-            if(!t) return;
-            const fecha = new Date().toLocaleDateString();
-            appendToSheet('Bucher!A:C', [t, h, fecha], () => {
-                document.getElementById('bucher-titulo').value = '';
-            });
-        }
-
-        // --- LÓGICA DUOLINGO DIARIO (Celda correspondiente al 5 de octubre) ---
-        // Asumiendo que el 5 de octubre está en la fila 5 de tu hoja de Duolingo
-        const DUO_ROW_HOY = 5; 
-
-        function renderizarDuolingoDiario(leccionesMarcadas) {
-            const container = document.getElementById('duo-daily-checkboxes');
-            container.innerHTML = '';
-            
-            for (let i = 1; i <= 10; i++) {
-                const item = document.createElement('div');
-                item.className = 'duo-box-item';
-                
-                const isChecked = i <= leccionesMarcadas;
-                item.innerHTML = `
-                    <span style="font-size: 0.75rem; font-weight: bold; color: var(--text-muted); margin-bottom: 4px;">#${i}</span>
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="actualizarDuolingoHoy(${i}, this.checked)">
-                `;
-                container.appendChild(item);
-            }
-        }
-
-        async function actualizarDuolingoHoy(numeroLeccion, isChecked) {
-            const nuevaCantidad = isChecked ? numeroLeccion : numeroLeccion - 1;
-            renderizarDuolingoDiario(nuevaCantidad);
-            
-            // Actualiza la celda de la lección del día en tu hoja de cálculo (ej. Columna B, fila 5 para 5 de octubre)
-            if (accessToken) {
-                document.getElementById('duo-status-sheet').innerText = 'Guardando...';
-                await updateCell(`Duolingo!B${DUO_ROW_HOY}`, nuevaCantidad);
-            } else {
-                // Guardado local si no hay sesión activa de Google
-                localStorage.setItem('duo_hoy_local', nuevaCantidad);
-            }
-        }
-
-        function extractYouTubeID(url) {
-            if(!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        function openPlayerModal(videoId, title) {
-            document.getElementById('modal-title').innerText = decodeURIComponent(title);
-            document.getElementById('youtube-player-slot').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            document.getElementById('modal-player').style.display = 'flex';
-        }
-
-        function closePlayerModal() {
-            document.getElementById('modal-player').style.display = 'none';
-            document.getElementById('youtube-player-slot').innerHTML = '';
-        }
-
-        function cambiarFiltroNivel() {
-            const nivelSeleccionado = document.getElementById('filtro-nivel').value;
-            if (nivelSeleccionado === 'TODOS') {
-                filteredVocabData = [...globalVocabData];
-            } else {
-                filteredVocabData = globalVocabData.filter(item => item.nivel === nivelSeleccionado);
-            }
-            currentVocabIndex = 0;
-            loadNextVocab();
-        }
-
-        function loadNextVocab() {
-            if(!filteredVocabData.length) {
-                document.getElementById('vocab-word').innerText = "Sin palabras en este nivel";
-                document.getElementById('vocab-nivel-cat').innerText = "---";
-                document.getElementById('vocab-options-container').innerHTML = '';
-                return;
-            }
-            const item = filteredVocabData[currentVocabIndex];
-            document.getElementById('vocab-nivel-cat').innerText = `${item.nivel} • ${item.cat}`;
-            document.getElementById('vocab-word').innerText = item.palabra;
-            const container = document.getElementById('vocab-options-container');
-            container.innerHTML = '';
-            
-            const shuffled = [...item.opciones].sort(() => Math.random() - 0.5);
-            shuffled.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if(opt === item.correcta) {
-                        btn.style.background = '#e6f4ea'; btn.style.borderColor = '#137333'; btn.style.color = '#137333';
-                        setTimeout(loadNextVocab, 700);
-                    } else {
-                        btn.style.background = '#fce8e6'; btn.style.borderColor = '#c5221f'; btn.style.color = '#c5221f';
-                    }
-                };
-                container.appendChild(btn);
-            });
-            currentVocabIndex = (currentVocabIndex + 1) % filteredVocabData.length;
-        }
-
-        function leerTexto(texto) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'de-DE';
-                utterance.rate = 0.9;
-                window.speechSynthesis.speak(utterance);
-            } else {
-                alert("Tu navegador no soporta la reproducción de voz.");
-            }
-        }
-
-        function solicitarPermisoNotificaciones() {
-            if ("Notification" in window && Notification.permission !== "granted") {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        console.log("Permiso de notificaciones concedido.");
-                    }
-                });
-            }
-        }
-
-        let ultimaNotificacionCondicional = "";
-        
-        function iniciarMotorNotificaciones(sheetDataNotif, leccionesHoy) {
-            if (!("Notification" in window) || Notification.permission !== "granted") return;
-        
-            const ahora = new Date();
-            const horaActual = ahora.getHours().toString().padStart(2, '0') + ":" + ahora.getMinutes().toString().padStart(2, '0');
-            const horaNumerica = ahora.getHours();
-        
-            // Recorrer las reglas que vienen de Google Sheets
-            sheetDataNotif.forEach(regla => {
-                const [tipo, condicionHora, mensaje, activo] = regla;
-                if (activo !== 'SI') return;
-        
-                if (tipo === 'Hora' && condicionHora === horaActual) {
-                    // Evitar disparar múltiples veces en el mismo minuto exacto
-                    const claveNotif = `hora_${horaActual}`;
-                    if (localStorage.getItem(claveNotif) !== 'enviado') {
-                        new Notification("DEU PRO 🇩🇪", { body: mensaje, icon: 'data:image/svg+xml,...' });
-                        localStorage.setItem(claveNotif, 'enviado');
-                    }
-                }
-        
-                if (tipo === 'Condicion') {
-                    // Ejemplo: A las 4:00 PM (16:00) si lecciones es menor a 5
-                    const horaMeta = parseInt(condicionHora.split(':')[0]);
-                    if (horaNumerica >= horaMeta && leccionesHoy < 5) {
-                        const hoyStr = ahora.toDateString();
-                        if (localStorage.getItem(`cond_${hoyStr}`) !== 'enviado') {
-                            new Notification("¡Alerta Duolingo! 🦉", { body: mensaje });
-                            localStorage.setItem(`cond_${hoyStr}`, 'enviado');
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Ejecutar el chequeo cada 5 minutos (300000 ms)
-        setInterval(() => {
-            if (accessToken) {
-                // Aquí llamarías a tu función que lee la pestaña Notificaciones y Duolingo
-                verificarReglasDesdeSheet();
-            }
-        }, 300,000);
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-              apiKey: "AIzaSyAz14i2wcoJ7hQpbQ0_unr41_0ms4PIoTI",
-              authDomain: "prodeu-61ee3.firebaseapp.com",
-              projectId: "prodeu-61ee3",
-              storageBucket: "prodeu-61ee3.firebasestorage.app",
-              messagingSenderId: "635497125360",
-              appId: "1:635497125360:web:0fb70f7f72e51097deb935",
-              measurementId: "G-WCZ15JZ8FV"
-            };
-        firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-    
-        function solicitarTokenFirebase() {
-            messaging.getToken({ vapidKey: 'TU_CLAVE_VAPID_PUBLICA' }).then((currentToken) => {
-                if (currentToken) {
-                    console.log("FCM Token obtenido:", currentToken);
-                    // Opcional: Envías este token a tu Google Sheet para que Apps Script te tenga registrado
-                } else {
-                    console.log('No se pudo obtener el token de registro.');
-                }
-            }).catch((err) => {
-                console.log('Error al obtener el token: ', err);
-            });
-        }
-    </script>
-</body>
-</html>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">¿Cuál es la traducción correcta?</p
