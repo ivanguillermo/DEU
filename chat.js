@@ -142,8 +142,26 @@ function agregarMensajeChat(remitente, texto) {
 }
 
 // Función puente simulada / configurable para llamar a Gemini
+// Reemplaza la función simularRespuestaGemini en tu chat.js por esta llamada a tu Apps Script:
 async function simularRespuestaGemini(systemPrompt, history) {
-    // Aquí puedes conectar tu llamada real a la API de Gemini mediante fetch o Apps Script
-    // Por seguridad en frontend puro o backend Apps Script, aseguramos la petición:
-    return "Das ist ein sehr interessanter Punkt! Me parece genial que hablemos de esto. ¿Qué más recuerdas sobre " + temaActual.titulo + "?";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmqiPpTLrvH3_t5IADh7TMI73WzgJH2PQC1mgGTpLs7-TTFBosGIDmc0yVMVoV03qE/exec"; 
+
+    const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        // Nota: no enviamos headers de autorización complejos para evitar problemas de CORS en POST libre,
+        // o usamos text/plain si Apps Script lo requiere, pero este formato json funciona perfecto con Web Apps desplegadas.
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+            systemPrompt: systemPrompt,
+            history: history
+        })
+    });
+
+    const data = await response.json();
+    
+    if (data.success) {
+        return data.response;
+    } else {
+        throw new Error(data.error || "Error en el servidor de Apps Script");
+    }
 }
