@@ -157,6 +157,7 @@ async function fetchAllSheetsData() {
     });
 
    initLeitnerModule();
+   initKimsModule();
 }
 
 async function loadSheetRange(range, tableId, loadingId, containerId, rowParser) {
