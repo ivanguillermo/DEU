@@ -158,6 +158,7 @@ async function fetchAllSheetsData() {
 
    initLeitnerModule();
    initKimsModule();
+   initChatModule();
 }
 
 async function loadSheetRange(range, tableId, loadingId, containerId, rowParser) {
