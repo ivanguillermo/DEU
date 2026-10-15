@@ -9,7 +9,7 @@ async function initLeitnerModule() {
     document.getElementById('loading-leitner').style.display = 'block';
     
     // Suponiendo que tu pestaña en Sheets se llama 'Leitner_Flashcards' y va de A a G
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Leitner_Flashcards!A:G`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Leitner!A:G`;
     try {
         const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
         const data = await response.json();
