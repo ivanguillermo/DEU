@@ -33,6 +33,7 @@
             <li class="nav-item" onclick="switchTab('lecturas', this)"><i class="fa-solid fa-newspaper"></i> Lesen</li>
             <li class="nav-item" onclick="switchTab('leitner-section', this)"><i class="fa-solid fa-layer-group"></i> Leitner</li>
             <li class="nav-item" onclick="switchTab('kims-section', this)"><i class="fa-solid fa-brain"></i> Kim's Game</li>
+            <li class="nav-item" onclick="switchTab('chat-section', this)"><i class="fa-solid fa-comments"></i> Chat Alemán AI</li>
         </ul>
     </aside>
 
@@ -63,6 +64,39 @@
                         <span style="display: block; font-size: 0.8rem; color: var(--text-muted);">PROMEDIO (D2)</span>
                         <span id="duo-val-d2" style="font-size: 1.8rem; font-weight: 900; color: #137333;">0.0</span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAT BILINGÜE AI -->
+        <div id="chat-section" class="section-container">
+            <h1>Conversación Bilingüe AI <span class="gold">💬</span></h1>
+            <div id="loading-chat" class="loading-text" style="display:none;">Cargando temas de chat...</div>
+            
+            <div id="chat-card-ui" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; max-width: 700px; margin: 0 auto; display: none;">
+                <!-- Selector de Tema -->
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                    <label style="font-weight: 600; font-size: 0.9rem;">Elige un tema del día o escribe uno:</label>
+                    <select id="chat-tema-select" style="width: 100%;" onchange="seleccionarTemaChat()"></select>
+                    <input type="text5" id="chat-custom-tema" placeholder="O escribe un tema libre aquí y presiona Seleccionar..." style="width: 100%;">
+                    <button class="btn-action" onclick="seleccionarTemaChat()">Comenzar Conversación 🚀</button>
+                </div>
+        
+                <!-- Caja de Palabras Clave Obligatorias -->
+                <div id="chat-keywords-box" style="display: none; background: #fff8e1; border: 1px solid #ffe082; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px;">
+                    <span style="font-size: 0.75rem; color: #8d6e63; font-weight: bold; display: block;">PALABRAS CLAVE A USAR HOY:</span>
+                    <span id="chat-keywords-list" style="font-size: 0.95rem; font-weight: bold; color: #f57f17;">---</span>
+                </div>
+        
+                <!-- Contenedor del Chat -->
+                <div id="chat-messages-container" style="height: 350px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; margin-bottom: 15px;">
+                    <p style="color: var(--text-muted); text-align: center; margin: auto;">Selecciona un tema arriba para iniciar la práctica de conversación bilingüe.</p>
+                </div>
+        
+                <!-- Input para escribir -->
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="chat-user-input" placeholder="Escribe en alemán o español..." style="flex: 1;" onkeypress="if(event.key === 'Enter') enviarMensajeChat()">
+                    <button class="btn-action" onclick="enviarMensajeChat()">Enviar</button>
                 </div>
             </div>
         </div>
@@ -241,5 +275,6 @@
     <script src="app.js"></script>
     <script src="leitner.js"></script>
     <script src="kims.js"></script>
+    <script src="chat.js"></script>
 </body>
 </html>
