@@ -8,7 +8,7 @@ async function initLeitnerModule() {
     if (!accessToken) return;
     document.getElementById('loading-leitner').style.display = 'block';
     
-    // Suponiendo que tu pestaña en Sheets se llama 'Leitner_Flashcards' y va de A a G
+    // Suponiendo que tu pestaña en Sheets se llama 'Leitner' y va de A a G
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Leitner!A:G`;
     try {
         const response = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
@@ -91,9 +91,9 @@ async function responderLeitner(acierto) {
 
     // Actualizar celdas en Google Sheets (Columna D = Nivel_Caja, E = Ultimo_Repaso, F = Proximo_Repaso)
     const fila = currentCardData.rowIndex;
-    await actualizarCeldaSheet(`Leitner_Flashcards!D${fila}`, nuevaCaja);
-    await actualizarCeldaSheet(`Leitner_Flashcards!E${fila}`, fechaHoyStr);
-    await actualizarCeldaSheet(`Leitner_Flashcards!F${fila}`, proximaFecha);
+    await actualizarCeldaSheet(`Leitner!D${fila}`, nuevaCaja);
+    await actualizarCeldaSheet(`Leitner!E${fila}`, fechaHoyStr);
+    await actualizarCeldaSheet(`Leitner!F${fila}`, proximaFecha);
 
     // Pasar a la siguiente ficha
     currentLeitnerIndex++;
