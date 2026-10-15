@@ -144,7 +144,7 @@ function agregarMensajeChat(remitente, texto) {
 // Función puente simulada / configurable para llamar a Gemini
 // Reemplaza la función simularRespuestaGemini en tu chat.js por esta llamada a tu Apps Script:
 async function simularRespuestaGemini(systemPrompt, history) {
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmqiPpTLrvH3_t5IADh7TMI73WzgJH2PQC1mgGTpLs7-TTFBosGIDmc0yVMVoV03qE/exec"; 
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5r-IPV9-DwelnZ2GExBj0LTADzS1d5cKTvzm2xwBWZu3-q5w-a9kSVwkFUUoAMzWT/exec"; 
 
     const response = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
