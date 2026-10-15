@@ -32,6 +32,7 @@
             <li class="nav-item" onclick="switchTab('vocabulario', this)"><i class="fa-solid fa-language"></i> Wortschatz</li>
             <li class="nav-item" onclick="switchTab('lecturas', this)"><i class="fa-solid fa-newspaper"></i> Lesen</li>
             <li class="nav-item" onclick="switchTab('leitner-section', this)"><i class="fa-solid fa-layer-group"></i> Leitner</li>
+            <li class="nav-item" onclick="switchTab('kims-section', this)"><i class="fa-solid fa-brain"></i> Kim's Game</li>
         </ul>
     </aside>
 
@@ -158,6 +159,35 @@
             </div>
         </div>
 
+        <!-- KIM'S GAME -->
+        <div id="kims-section" class="section-container">
+            <h1>Kim's Game <span class="gold">🧠</span></h1>
+            <div id="loading-kims" class="loading-text" style="display:none;">Cargando Kim's Game...</div>
+            
+            <div id="kims-card-ui" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; max-width: 650px; margin: 0 auto;">
+                <span class="badge" id="kims-category-title" style="background: #e2e8f0; color: #1e293b; margin-bottom: 15px; display:inline-block;">Categoría</span>
+                
+                <div id="kims-timer-display" style="margin-bottom: 15px; font-weight: bold; color: var(--primary);">
+                    Memoriza las palabras: <span id="kims-timer-count" style="font-size: 1.2rem;">10</span>s
+                </div>
+        
+                <!-- Contenedor de la Nube de Palabras -->
+                <div id="kims-cloud-container" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; min-height: 100px; align-content: center; background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                </div>
+        
+                <!-- Sección de input para adivinar -->
+                <div id="kims-input-section" style="display: none; margin-top: 20px;">
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 10px;">Escribe las palabras que faltaban (separadas por comas):</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="kims-user-answer" placeholder="Ej: palabra1, palabra2..." style="flex: 1;">
+                        <button class="btn-action" onclick="verificarRespuestaKim()">Comprobar</button>
+                    </div>
+                    <div id="kims-feedback" style="margin-top: 15px; font-weight: 600; font-size: 0.95rem;"></div>
+                    <button class="btn-action" style="margin-top: 20px; background: #64748b; width: 100%; padding: 10px;" onclick="cargarNuevoSetKim()">Siguiente Set 🔄</button>
+                </div>
+            </div>
+        </div>
+
         <!-- WORTSCHATZ (Vocabulario) -->
         <div id="vocabulario" class="section-container">
             <h1>Wortschatz Pro</h1>
@@ -210,5 +240,6 @@
     <!-- Tu archivo JS separado -->
     <script src="app.js"></script>
     <script src="leitner.js"></script>
+    <script src="kims.js"></script>
 </body>
 </html>
