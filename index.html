@@ -31,6 +31,7 @@
             <li class="nav-item" onclick="switchTab('duolingo', this)"><i class="fa-solid fa-star"></i> Duo</li>
             <li class="nav-item" onclick="switchTab('vocabulario', this)"><i class="fa-solid fa-language"></i> Wortschatz</li>
             <li class="nav-item" onclick="switchTab('lecturas', this)"><i class="fa-solid fa-newspaper"></i> Lesen</li>
+            <li class="nav-item" onclick="switchTab('leitner-section', this)"><i class="fa-solid fa-layer-group"></i> Leitner</li>
         </ul>
     </aside>
 
@@ -129,6 +130,34 @@
             </table>
         </div>
 
+        <!-- LEITNER SYSTEM -->
+        <div id="leitner-section" class="section-container">
+            <h1>Sistema Leitner <span class="gold">🗂️</span></h1>
+            <div id="loading-leitner" class="loading-text">Cargando fichas pendientes de repaso...</div>
+            
+            <div id="leitner-card-ui" style="display:none; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; max-width: 600px; margin: 0 auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span class="badge" id="leitner-box-badge" style="background: #e2e8f0; color: #1e293b;">Caja 1</span>
+                    <span id="leitner-counter" style="font-size: 0.85rem; color: var(--text-muted);">Ficha 1 de 5</span>
+                </div>
+                
+                <div id="leitner-question" style="font-size: 1.5rem; font-weight: 700; margin: 20px 0; color: var(--text-main);">Pregunta / Anverso</div>
+                
+                <!-- Botón para voltear la ficha -->
+                <button class="btn-action" style="background: #64748b; margin-bottom: 20px; width: 100%; padding: 10px;" onclick="voltearFichaLeitner()">Ver Respuesta</button>
+                
+                <div id="leitner-answer-container" style="display: none; margin-bottom: 20px; padding: 15px; background: var(--bg-color); border-radius: 8px; border: 1px solid var(--border);">
+                    <div id="leitner-answer" style="font-size: 1.2rem; font-weight: 600; color: var(--primary);">Respuesta / Reverso</div>
+                </div>
+        
+                <!-- Botones de evaluación (Acierto / Fallo) -->
+                <div id="leitner-actions" style="display: none; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+                    <button style="padding: 12px; border: 1px solid #c5221f; background: #fce8e6; color: #c5221f; border-radius: 8px; font-weight: 700; cursor: pointer;" onclick="responderLeitner(false)">❌ Fallé (Vuelve a Caja 1)</button>
+                    <button style="padding: 12px; border: 1px solid #137333; background: #e6f4ea; color: #137333; border-radius: 8px; font-weight: 700; cursor: pointer;" onclick="responderLeitner(true)">✔ Acerté (Sube de Caja)</button>
+                </div>
+            </div>
+        </div>
+
         <!-- WORTSCHATZ (Vocabulario) -->
         <div id="vocabulario" class="section-container">
             <h1>Wortschatz Pro</h1>
@@ -180,5 +209,6 @@
 
     <!-- Tu archivo JS separado -->
     <script src="app.js"></script>
+    <script src="leitner.js"></script>
 </body>
 </html>
