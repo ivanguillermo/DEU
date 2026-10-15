@@ -78,6 +78,7 @@ async function fetchAllSheetsData() {
         const toggleBtn = `<button class="table-link" style="color:var(--text-main);" onclick="togglePodcastStatus(${index + 2}, '${row[3]}')">Cambiar</button>`;
         return `<td>${row[0] || ''}</td><td>${row[1] || ''}</td><td>${btnHtml}</td><td><span class="badge ${badgeClass}">${row[3] || 'NO'}</span></td><td>${toggleBtn}</td>`;
     });
+    
 
     // Kinos
     loadSheetRangeCustom('Kinos!A:C', (rows) => {
@@ -154,6 +155,8 @@ async function fetchAllSheetsData() {
             cambiarFiltroNivel();
         }
     });
+
+   initLeitnerModule();
 }
 
 async function loadSheetRange(range, tableId, loadingId, containerId, rowParser) {
