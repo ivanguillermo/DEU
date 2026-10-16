@@ -372,7 +372,7 @@ async function initPushNotifications() {
 
     try {
         // Registrar el service worker
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
         console.log('Service Worker registrado');
 
         // Pedir permiso
