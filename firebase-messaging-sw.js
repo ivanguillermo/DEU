@@ -1,4 +1,3 @@
-// firebase-messaging-sw.js
 importScripts('https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.14.0/firebase-messaging-compat.js');
 
@@ -15,16 +14,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// Manejar notificaciones cuando la app está en segundo plano
 messaging.onBackgroundMessage((payload) => {
-  console.log('Notificación en background:', payload);
-  
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: '/icon.png',
-    badge: '/icon.png'
+  console.log('Notificación recibida en background:', payload);
+
+  const title = payload.notification?.title || payload.data?.title || 'DEU PRO';
+  const options = {
+    body: payload.notification?.body || payload.data?.body || 'Nueva notificación',
+    icon: './icon.png',          // ruta relativa
+    badge: './icon.png',
+    data: payload.data || {},
+    requireInteraction: false
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(title, options);
 });
