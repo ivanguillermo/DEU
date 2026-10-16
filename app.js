@@ -21,21 +21,24 @@ window.onload = function () {
         client_id: CLIENT_ID,
         scope: SCOPES,
         callback: (resp) => {
-            if (resp.error !== undefined) { console.error(resp); return; }
+            if (resp.error !== undefined) {
+                console.error(resp);
+                return;
+            }
             accessToken = resp.access_token;
-            // Guardamos el token en localStorage para que persista y Google no vuelva a pedir autorización
             localStorage.setItem('deu_access_token', accessToken);
             updateAuthUI(true);
             fetchAllSheetsData();
+            
+            // Una vez conectado, inicializamos las notificaciones
+            initPushNotifications();
         }
     });
 
     if (accessToken) {
         updateAuthUI(true);
         fetchAllSheetsData();
-    } else {
-        // Intento de inicio de sesión automático silencioso si ya dio permisos antes
-        // Esto evita que salga el aviso molesto cada vez
+        initPushNotifications();   // También aquí
     }
     
     renderizarDuolingoDiario(0);
