@@ -3,6 +3,12 @@ self.addEventListener('install', (e) => {
         caches.open('deu-store').then((cache) => {
             return cache.addAll([
                 './index.html',
+                './app.js',
+                './chat.js',
+                './firebase-messaging-sw.js',
+                './kims.js',
+                './leitner.js',
+                './style.css',
                 './manifest.json'
             ]);
         })
