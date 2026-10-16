@@ -57,15 +57,20 @@ function updateAuthUI(isConnected) {
 
 function handleAuthClick() {
     if (!accessToken) {
-        // Usamos 'select_account' solo la primera vez o si cerró sesión explícitamente
+        // Primera vez o después de cerrar sesión → pide consentimiento
         tokenClient.requestAccessToken({ prompt: 'consent' });
     } else {
+        // Cerrar sesión
         accessToken = null;
         localStorage.removeItem('deu_access_token');
         updateAuthUI(false);
     }
 }
-
+function requestNewToken(silent = false) {
+    tokenClient.requestAccessToken({
+        prompt: silent ? '' : 'consent'   // '' = intento silencioso
+    });
+}
 async function fetchAllSheetsData() {
     if (!accessToken) return;
 
@@ -218,11 +223,14 @@ async function updateCell(rangeCell, newValue) {
 }
 
 function handleAuthExpired() {
+    console.log('Token expirado, intentando renovar...');
     localStorage.removeItem('deu_access_token');
     accessToken = null;
     updateAuthUI(false);
+    
+    // Intento silencioso primero
+    requestNewToken(true);
 }
-
 function togglePodcastStatus(rowNumber, currentStatus) {
     updateCell(`Podcast!D${rowNumber}`, currentStatus === 'Visto' ? 'NO' : 'Visto');
 }
