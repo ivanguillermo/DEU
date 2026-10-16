@@ -360,3 +360,89 @@ function leerTexto(texto) {
         window.speechSynthesis.speak(utt);
     }
 }
+
+// ========== NOTIFICACIONES PUSH ==========
+const VAPID_KEY = 'BBCKPITE2jjpTS2M7Jn4p-tcvg61AVJm2Y3NpdOAyNjtwhew0oROSWxhce-TA8fTM1MSeF8h--XLt4qTLG4Ch0g'; // La sacas de Firebase Console → Project Settings → Cloud Messaging → Web Push certificates
+
+async function initPushNotifications() {
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+        console.log('Este navegador no soporta notificaciones');
+        return;
+    }
+
+    try {
+        // Registrar el service worker
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        console.log('Service Worker registrado');
+
+        // Pedir permiso
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+            console.log('Permiso de notificaciones denegado');
+            return;
+        }
+
+        // Inicializar Firebase Messaging
+        const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js');
+        const { getMessaging, getToken, onMessage } = await import('https://www.gstatic.com/firebasejs/10.14.0/firebase-messaging.js');
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAz14i2wcoJ7hQpbQ0_unr41_0ms4PIoTI",
+            authDomain: "prodeu-61ee3.firebaseapp.com",
+            projectId: "prodeu-61ee3",
+            storageBucket: "prodeu-61ee3.firebasestorage.app",
+            messagingSenderId: "635497125360",
+            appId: "1:635497125360:web:0fb70f7f72e51097deb935"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+
+        // Obtener el token FCM
+        const currentToken = await getToken(messaging, {
+            vapidKey: VAPID_KEY,
+            serviceWorkerRegistration: registration
+        });
+
+        if (currentToken) {
+            console.log('FCM Token:', currentToken);
+            // Guardamos el token en la hoja de cálculo
+            await saveFcmTokenToSheet(currentToken);
+        } else {
+            console.log('No se pudo obtener el token FCM');
+        }
+
+        // Notificaciones cuando la app está abierta
+        onMessage(messaging, (payload) => {
+            console.log('Mensaje recibido en foreground:', payload);
+            // Aquí puedes mostrar una notificación personalizada si quieres
+        });
+
+    } catch (err) {
+        console.error('Error inicializando push:', err);
+    }
+}
+
+async function saveFcmTokenToSheet(token) {
+    if (!accessToken) return;
+    
+    // Guardamos el token en una celda fija, por ejemplo en la hoja "Config" celda A1
+    // o en Duolingo!Z1 (elige una celda que no uses)
+    const range = 'Config!A1';  // ← Crea esta hoja o cambia la celda
+    
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`;
+    
+    try {
+        await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ values: [[token]] })
+        });
+        console.log('Token FCM guardado en la hoja');
+    } catch (err) {
+        console.error('Error guardando token FCM:', err);
+    }
+}
